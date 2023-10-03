@@ -5,6 +5,10 @@ add_action('controller', function(){
 
 });
 
+add_action('after_view', function() {
+  echo "<center>Website Copyright 2023</center>";
+});
+
 add_action('view', function(){
 
   echo "<form method='post' style='width:400px;margin:auto;text-align:center;margin-top:50px'> 
