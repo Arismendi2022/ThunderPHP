@@ -1,5 +1,5 @@
 Options -Indexes
-RewriteEngine On 
+RewriteEngine On
 
 #deny access to thunder CLI file
 RewriteRule ^(thunder)$ index.php?url=$1 [L,QSA]
