@@ -176,14 +176,14 @@
 		}
 	}
 	
-	function do_filter()
+	function add_filter()
 	{
 	
 	}
 	
-	function add_filter()
+	function do_filter(string $hook, mixed $data = ''): mixed
 	{
-	
+		return $data;
 	}
 	
 	function dd($data)
