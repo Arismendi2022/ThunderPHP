@@ -4,7 +4,7 @@
 	use \PDO;
 	use \PDOException;
 	
-	define('ROOT') or die("Direct script access denied");
+	defined('ROOT') or die("Direct script access denied");
 	
 	/**
 	 * Database class
