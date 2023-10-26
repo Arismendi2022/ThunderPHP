@@ -30,16 +30,15 @@
 				foreach ($keyOrArray as $key => $value) {
 					$_SESSION[$this->varKey][$key] = $value;
 				}
-				
-				$_SESSION[$this->varKey][$keyOrArray] = $value;
-				
+				return true;
 			} else {
 				$_SESSION[$this->varKey][$keyOrArray] = $value;
+				return true;
 			}
 			return false;
 		}
 		
-		public function get(string $key): bool
+		public function get(string $key): mixed
 		{
 			$this->starSession ();
 			if (!empty($_SESSION[$this->varKey][$key])) {
@@ -92,7 +91,7 @@
 			return true;
 		}
 		
-		public function use(string $key = ''): mixed
+		public function user(string $key = ''): mixed
 		{
 			$this->starSession ();
 			
@@ -117,6 +116,17 @@
 			
 		}
 		
-	}
+		public function all(): mixed
+		{
+			$this->starSession ();
+			if (!empty($_SESSION[$this->varKey][$key])) {
+				return $_SESSION[$this->varKey][$key];
+				
+			}
+			
+			return null;
+		}
 		
+	}
+	
 

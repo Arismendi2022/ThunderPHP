@@ -232,4 +232,8 @@
 		}
 		return $path;
 	}
-  
+ 
+	function user_can($permission){
+		
+		return true;
+	}
