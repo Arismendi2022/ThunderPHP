@@ -1,10 +1,8 @@
 <?php
 	
-	require plugin_dir() . 'includes/view.php';
-	
 	add_action('view', function () {
 		
-		dd('this is from the view hook in home-page plugin');
+		//dd('esto es desde el gancho de vista en el complemento de la página de inicio');
 		
 	});
 	

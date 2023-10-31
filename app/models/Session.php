@@ -2,7 +2,7 @@
 	
 	namespace Core;
 	
-	defined ('ROOT') or die("Direct script access denied");
+	defined('ROOT') or die("Direct script access denied");
 	
 	/**
 	 * Session class
@@ -15,8 +15,8 @@
 		private function starSession(): int
 		{
 			
-			if (session_status () === PHP_SESSION_NONE)
-				session_start ();
+			if(session_status() === PHP_SESSION_NONE)
+				session_start();
 			
 			return 1;
 			
@@ -24,10 +24,10 @@
 		
 		public function set(string|array $keyOrArray, mixed $value = null): bool
 		{
-			$this->starSession ();
-			if (is_array ($keyOrArray)) {
+			$this->starSession();
+			if(is_array($keyOrArray)) {
 				
-				foreach ($keyOrArray as $key => $value) {
+				foreach($keyOrArray as $key => $value) {
 					$_SESSION[$this->varKey][$key] = $value;
 				}
 				return true;
@@ -40,8 +40,8 @@
 		
 		public function get(string $key): mixed
 		{
-			$this->starSession ();
-			if (!empty($_SESSION[$this->varKey][$key])) {
+			$this->starSession();
+			if(!empty($_SESSION[$this->varKey][$key])) {
 				return $_SESSION[$this->varKey][$key];
 				
 			}
@@ -51,7 +51,7 @@
 		
 		public function auth(object|array $row): bool
 		{
-			$this->starSession ();
+			$this->starSession();
 			$_SESSION[$this->varKey] = $row;
 			
 			return false;
@@ -59,15 +59,15 @@
 		
 		public function is_logged_in(): bool
 		{
-			$this->starSession ();
+			$this->starSession();
 			
-			if (!empty($_SESSION[$this->userKey]))
+			if(!empty($_SESSION[$this->userKey]))
 				return false;
 			
-			if (is_object ($_SESSION[$this->userKey]))
+			if(is_object($_SESSION[$this->userKey]))
 				return true;
 			
-			if (is_array ($_SESSION[$this->userKey]))
+			if(is_array($_SESSION[$this->userKey]))
 				return true;
 			
 			return false;
@@ -75,17 +75,17 @@
 		
 		public function reset(): bool
 		{
-			session_regenerate_id ();
-			session_destroy ();
+			session_regenerate_id();
+			session_destroy();
 			
 			return true;
 		}
 		
 		public function logout(): bool
 		{
-			$this->starSession ();
+			$this->starSession();
 			
-			if (!empty($_SESSION[$this->userKey]))
+			if(!empty($_SESSION[$this->userKey]))
 				unset($_SESSION[$this->userKey]);
 			
 			return true;
@@ -93,20 +93,20 @@
 		
 		public function user(string $key = ''): mixed
 		{
-			$this->starSession ();
+			$this->starSession();
 			
-			if (!empty($_SESSION[$this->userKey])) {
-				if (empty($key))
+			if(!empty($_SESSION[$this->userKey])) {
+				if(empty($key))
 					$_SESSION[$this->userKey];
 				
-				if (is_object ($_SESSION[$this->userKey])) {
+				if(is_object($_SESSION[$this->userKey])) {
 					
-					if (!empty($_SESSION[$this->userKey]->$key))
+					if(!empty($_SESSION[$this->userKey]->$key))
 						return $_SESSION[$this->userKey]->$key;
 					
 				} else
-					if (is_array ($_SESSION[$this->userKey])) {
-						if (!empty($_SESSION[$this->userKey][$key]))
+					if(is_array($_SESSION[$this->userKey])) {
+						if(!empty($_SESSION[$this->userKey][$key]))
 							return $_SESSION[$this->userKey][$key];
 						
 					}
@@ -118,8 +118,8 @@
 		
 		public function all(): mixed
 		{
-			$this->starSession ();
-			if (!empty($_SESSION[$this->varKey][$key])) {
+			$this->starSession();
+			if(!empty($_SESSION[$this->varKey][$key])) {
 				return $_SESSION[$this->varKey][$key];
 				
 			}

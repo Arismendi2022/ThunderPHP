@@ -1,24 +1,31 @@
-<link rel="stylesheet" type="text/css" href="<?= plugin_http_dir() . 'css/style.css' ?>">
 <?php
 	
-	add_action('controller', function () {
+	add_filter('user_permissions', function($permissions) {
 		
-		$arr = ['name' => 'Mary', 'age' => 30];
-		set_value($arr);
-		
-	});
-	
-	add_action('after_view', function () {
-		echo "<center>Website Copyright 2023</center>";
-	});
-	
-	add_action('view', function () {
-		dd(get_value());
+		return $permissions;
 		
 	});
 	
-	add_action('before_view', function () {
+	add_action('controller', function() {
+	
+	
+	});
+	
+	add_action('after_view', function() {
 		
-		echo "<center><div><a href=''>Home </a> . About us . Contact us</div></center>";
+		require plugin_path('includes\footer.view.php');
+	});
+	
+	add_action('view', function() {
 		
+		/*$limit = 10;
+		$pager = new \Core\Pager($limit, 2);
+		$offset = $pager->offset;
+		$pager->display ();*/
+		
+	});
+	
+	add_action('before_view', function() {
+		
+		require plugin_path('includes\header.view.php');
 	});

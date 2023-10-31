@@ -12,7 +12,8 @@
       do_action('before_controller');
       do_action('controller');
       do_action('after_controller');
-      
+			
+      ob_start();
       do_action('before_view');
       
       $before_content = ob_get_contents();

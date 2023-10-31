@@ -1,29 +1,33 @@
 <?php
 	
-	session_start ();
+	session_start();
 	
 	$minPHPVersion = '8.0';
-	if (phpversion () < $minPHPVersion)
+	if(phpversion() < $minPHPVersion)
 		die("You need a minimun of PHP version $minPHPVersion to run this app");
 	
-	define ('DS', DIRECTORY_SEPARATOR);
-	define ('ROOTPATH', __DIR__ . DS);
+	define('DS', DIRECTORY_SEPARATOR);
+	define('ROOTPATH', __DIR__ . DS);
 	
 	require 'config.php';
 	require 'app' . DS . 'core' . DS . 'init.php';
 	
-	DEBUG ? ini_set ('display_errors', 1) : ini_set ('display_errors', 0);
+	DEBUG ? ini_set('display_errors', 1) : ini_set('display_errors', 0);
 	
 	$ACTIONS = [];
 	$FILTERS = [];
-	$APP['URL'] = split_url ($_GET['url'] ?? 'home');
+	$APP['URL'] = split_url($_GET['url'] ?? 'home');
+	$APP['permissions'] = [];
 	$USER_DATA = [];
 	
 	/** load plugins  **/
-	$PLUGINS = get_plugin_folders ();
-	if (!load_plugins ($PLUGINS))
+	$PLUGINS = get_plugin_folders();
+	if(!load_plugins($PLUGINS))
 		
-		die("<center><h1 style='font-family: Tahoma'>No plugins were found! please put at least one pluging in the plugins folder</h1></center>");
+		die("<center><h1 style='font-family: Tahoma'>¡No se encontraron complementos! coloque al menos un complemento en la carpeta de complementos</h1></center>");
 	
+	$APP['permissions'] = do_filter('user_permissions', $APP['permissions']);
+	
+	/** load the app */
 	$app = new \Core\App();
-	$app->index ();
+	$app->index();
