@@ -257,6 +257,105 @@
 		global $APP;
 		return true;
 	}
-		
 	
+	function old_value(string $key, string $default = '', string $type = 'post'): string
+	{
+		$array = $_POST;
+		if($type == 'get')
+			$array = $_GET;
+		
+		if(!empty($array[$key]))
+			return $array[$key];
+		
+		return $default;
+	}
+	
+	function old_select(string $key, string $value, string $default = '', string $type = 'post'): string
+	{
+		$array = $_POST;
+		if($type == 'get')
+			$array = $_GET;
+		
+		if(!empty($array[$key])) {
+			if($array[$key] == $value)
+				return ' selected ';
+		} else {
+			if($default == $value)
+				return ' selected ';
+		}
+		
+		return '';
+	}
+	
+	function old_checked(string $key, string $value, string $default = '', string $type = 'post'): string
+	{
+		$array = $_POST;
+		if($type == 'get')
+			$array = $_GET;
+		
+		if(!empty($array[$key])) {
+			if($array[$key] == $value)
+				return ' checked ';
+		} else {
+			if($default == $value)
+				return ' checked ';
+		}
+		
+		return '';
+	}
+	
+	function csrf(string $sesKey = 'csrf', int $hours = 1): string
+	{
+		$key = '';
+		
+		$ses = new \Core\Session;
+		$key = hash('sha256', time() . rand(0, 99));
+		$expires = time() + ((60 * 60) * $hours);
+		
+		$ses->set($sesKey, [
+			'key' => $key,
+			'expires' => $expires
+		]);
+		
+		return "<input type='hidden' value='$key' name='$sesKey' />";
+	}
+	
+	function csrf_verify(array $post, string $sesKey = 'csrf'): mixed
+	{
+		if(empty($post[$sesKey]))
+			return false;
+		
+		$ses = new \Core\Session;
+		$data = $ses->get($sesKey);
+		if(is_array($data)) {
+			if($data['key'] !== $post[$sesKey])
+				return false;
+			
+			if($data['expires'] > time())
+				return true;
+			
+			$ses->pop($sesKey);
+			
+		}
+		
+		return false;
+	}
+	
+	function get_image(string $path = '', string $type = 'post')
+	{
+		if(file_exists($path))
+			return ROOT . '/' . $path;
+		
+		if($type == "post")
+			return ROOT . '/assets/images/no_image.jpg';
+		
+		if($type == "male")
+			return ROOT . '/assets/images/user_male.jpg';
+		
+		if($type == "female")
+			return ROOT . '/assets/images/user_female.jpg';
+		
+		return ROOT . '/assets/images/no_image.jpg';
+		
+	}
 	

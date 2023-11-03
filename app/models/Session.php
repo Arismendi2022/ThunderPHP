@@ -49,6 +49,20 @@
 			return false;
 		}
 		
+		public function pop(string $key): mixed
+		{
+			$this->starSession();
+			if(!empty($_SESSION[$this->varKey][$key]))
+			{
+				$var = $_SESSION[$this->varKey][$key];
+				unset($_SESSION[$this->varKey][$key]);
+				
+				return $var;
+			}
+			
+			return false;
+		}
+		
 		public function auth(object|array $row): bool
 		{
 			$this->starSession();

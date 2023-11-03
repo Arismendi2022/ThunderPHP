@@ -4,7 +4,7 @@
 	
 	use \Core\Database;
 	
-	defined('ROOT') or die("Direct script access denied");
+	defined('ROOT') or die("Acceso directo al script denegado");
 	
 	/**
 	 * Model class
@@ -55,9 +55,9 @@
 		
 		public function insert(array $data)
 		{
-			if(!empty($this->allowedInsertColumns)) {
+			if(!empty($this->allowedColumns)) {
 				foreach($data as $key => $value) {
-					if(!in_array($key, $this->allowedInsertColumns)) {
+					if(!in_array($key, $this->allowedColumns)) {
 						unset($data[$key]);
 					}
 				}

@@ -4,7 +4,7 @@
 	
 	$minPHPVersion = '8.0';
 	if(phpversion() < $minPHPVersion)
-		die("You need a minimun of PHP version $minPHPVersion to run this app");
+		die("Necesitas una versión mínima de PHP $minPHPVersion para ejecutar esta app");
 	
 	define('DS', DIRECTORY_SEPARATOR);
 	define('ROOTPATH', __DIR__ . DS);

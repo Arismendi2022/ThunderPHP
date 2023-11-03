@@ -2,21 +2,20 @@
 	
 	namespace Core;
 	
-	defined('ROOT') or die("Direct script access denied");
+	defined('ROOT') or die("Acceso directo al script denegado");
 	
 	/**
 	 * Image class
 	 */
 	class Image
 	{
-		
 		public function resize(string $filename, $max_size = 700): string
 		{
-			
 			if(!file_exists($filename))
 				return $filename;
 			
 			$type = mime_content_type($filename);
+			$angle = 0;
 			
 			switch($type) {
 				case 'image/jpeg':
@@ -35,6 +34,33 @@
 				default:
 					return $filename;
 					break;
+			}
+			
+			if($type == 'image/jpeg') {
+				$exif = @exif_read_data($filename);
+				if(!empty($exif['Orientation'])) {
+					switch($exif['Orientation']) {
+						case 3:
+							$angle = 180;
+							break;
+						case 5:
+							$angle = -90;
+							break;
+						case 6:
+							$angle = -90;
+							break;
+						case 7:
+							$angle = -90;
+							break;
+						case 8:
+							$angle = 90;
+							break;
+						
+						default:
+							$angle = 0;
+							break;
+					}
+				}
 			}
 			
 			$src_w = imagesx($image);
@@ -66,6 +92,9 @@
 			
 			imagecopyresampled($dst_image, $image, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
 			imagedestroy($image);
+			
+			if($type == 'image/jpeg' && $angle != 0)
+				$dst_image = imagerotate($dst_image, $angle, 0);
 			
 			switch($type) {
 				case 'image/jpeg':

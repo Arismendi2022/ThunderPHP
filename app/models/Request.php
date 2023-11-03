@@ -21,7 +21,7 @@
 			return $_SERVER['REQUEST_METHOD'] == 'POST';
 		}
 		
-		public function post(string $key = ''): string
+		public function post(string $key = ''): string|array
 		{
 			if(empty($key))
 				return $_POST;

@@ -2,7 +2,7 @@
 	
 	add_action('view', function () {
 		
-		//dd('esto es desde el gancho de vista en el complemento de la página de inicio');
+		dd('esto es desde el enganche de vista en el complemento de la página de inicio');
 		
 	});
 	

@@ -5,7 +5,7 @@
 	use \PDO;
 	use \PDOException;
 	
-	defined('ROOT') or die("Direct script access denied");
+	defined('ROOT') or die("Acceso directo al script denegado");
 	
 	/**
 	 * Database class
@@ -13,14 +13,16 @@
 	class Database
 	{
 		private static $query_id = '';
+		public $affected_rows = 0;
+		public $insert_id     = 0;
 		
 		private function connect()
 		{
-			$VARS['DB_NAME'] = DB_NAME;
-			$VARS['DB_USER'] = DB_USER;
+			$VARS['DB_NAME']     = DB_NAME;
+			$VARS['DB_USER']     = DB_USER;
 			$VARS['DB_PASSWORD'] = DB_PASSWORD;
-			$VARS['DB_HOST'] = DB_HOST;
-			$VARS['DB_DRIVER'] = DB_DRIVER;
+			$VARS['DB_HOST']     = DB_HOST;
+			$VARS['DB_DRIVER']   = DB_DRIVER;
 			
 			$VARS = do_filter('before_db_connect', $VARS);
 			
@@ -31,7 +33,7 @@
 				$con = setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				
 			} catch(PDOException $e) {
-				die("Failed to connect to database with error " . $e->getMessage());
+				die("No se pudo conectar a la base de datos con error " . $e->getMessage());
 				
 			}
 			return $con;
@@ -56,6 +58,9 @@
 			$stm = $con->prepare($query);
 			
 			$result = $stm->execute($data);
+			$this->affected_rows  = $stm->rowCount();
+			$this->insert_id      = $con->lastInsert();
+			
 			if($result) {
 				if($data_type == 'object') {
 					$row = $stm->fetchAll(PDO::FETCH_OBJ);

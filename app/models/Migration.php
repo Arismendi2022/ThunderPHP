@@ -56,9 +56,9 @@
 				$this->$uniqueKeys = [];
 				$this->$fullTextKeys = [];
 				
-				echo "\n\r Table $table created successfully!";
+				echo "\n\r Table $table creado exitosamente!";
 			} else {
-				echo "\n\r Column data not fount! Could not create table: $table";
+				echo "\n\r ¡No se encontraron datos de columna! No se pudo crear la tabla: $table";
 			}
 			
 		}
@@ -77,9 +77,9 @@
 				}
 				
 				$this->data = [];
-				echo "\n\r Data inserted successfully in table: $table";
+				echo "\n\r Datos insertados exitosamente en la tabla: $table";
 			} else {
-				echo "\n\r Row data not fount! No data inserted in table: $table";
+				echo "\n\r ¡No se encontraron datos de fila! No hay datos insertados en la tabla.: $table";
 			}
 		}
 		
@@ -112,7 +112,7 @@
 			$query = "DROP TABLE IF EXISTS $table";
 			$this->query ($query);
 			
-			echo "\n\r Table $table deleted successfully!";
+			echo "\n\r Table $table ¡borrado exitosamente!";
 			
 		}
 		
