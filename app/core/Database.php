@@ -15,6 +15,8 @@
 		private static $query_id = '';
 		public $affected_rows = 0;
 		public $insert_id     = 0;
+		public $error         = '';
+		public $has_error     = false;
 		
 		private function connect()
 		{
@@ -26,11 +28,11 @@
 			
 			$VARS = do_filter('before_db_connect', $VARS);
 			
-			$string = "$VARS[DB_DRIVER]:hostmane=$VARS[DB_HOST];dbname=$VARS[DB_NAME]";
+			$string = "$VARS[DB_DRIVER]:hostname=$VARS[DB_HOST];dbname=$VARS[DB_NAME]";
 			
 			try {
 				$con = new PDO($string, $VARS['DB_USER'], $VARS['DB_PASSWORD']);
-				$con = setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				
 			} catch(PDOException $e) {
 				die("No se pudo conectar a la base de datos con error " . $e->getMessage());
@@ -55,19 +57,31 @@
 			$data = do_filter('before_query_data', $data);
 			
 			$con = $this->connect();
-			$stm = $con->prepare($query);
 			
-			$result = $stm->execute($data);
-			$this->affected_rows  = $stm->rowCount();
-			$this->insert_id      = $con->lastInsert();
-			
-			if($result) {
-				if($data_type == 'object') {
-					$row = $stm->fetchAll(PDO::FETCH_OBJ);
-				} else {
-					$row = $stm->fetchAll(PDO::FETCH_ASSOC);
+			try
+			{
+				$stm = $con->prepare($query);
+				
+				$result = $stm->execute($data);
+				$this->affected_rows 	= $stm->rowCount();
+				$this->insert_id 		= $con->lastInsertId();
+				
+				if($result)
+				{
+					if($data_type == 'object'){
+						$rows = $stm->fetchAll(PDO::FETCH_OBJ);
+					}else{
+						$rows = $stm->fetchAll(PDO::FETCH_ASSOC);
+					}
+					
 				}
+				
+			}catch(PDOException $e)
+			{
+				$this->error 				= $e->getMessage();
+				$this->has_error 		= true;
 			}
+			
 			$arr = [];
 			$arr['query'] = $query;
 			$arr['data'] = $data;
@@ -76,9 +90,11 @@
 			self::$query_id = '';
 			
 			$result = do_filter('after_query', $arr);
+			
 			if(is_array($result) && count($result) > 0) {
 				return $result;
 			}
+			
 			return false;
 		}
 		

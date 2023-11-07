@@ -5,16 +5,16 @@
 		global $USER_DATA;
 		
 		$called_from = debug_backtrace();
-		$ikey = array_search(__FUNCTION__, array_column($called_from, 'function'));
-		$path = get_plugin_dir(debug_backtrace()[$ikey]['file']) . 'config.json';
+		$ikey = array_search( __FUNCTION__, array_column( $called_from, 'function' ) );
+		$path = get_plugin_dir( debug_backtrace()[$ikey]['file'] ) . 'config.json';
 		
-		if(file_exists($path)) {
-			$json = json_decode(file_get_contents($path));
+		if( file_exists( $path ) ) {
+			$json = json_decode( file_get_contents( $path ) );
 			$plugin_id = $json->id;
 			
-			if(is_array($key)) {
+			if( is_array( $key ) ) {
 				
-				foreach($key as $k => $value) {
+				foreach( $key as $k => $value ) {
 					$USER_DATA[$plugin_id][$k] = $value;
 				}
 			} else {
@@ -30,17 +30,17 @@
 		global $USER_DATA;
 		
 		$called_from = debug_backtrace();
-		$ikey = array_search(__FUNCTION__, array_column($called_from, 'function'));
-		$path = get_plugin_dir(debug_backtrace()[$ikey]['file']) . 'config.json';
+		$ikey = array_search( __FUNCTION__, array_column( $called_from, 'function' ) );
+		$path = get_plugin_dir( debug_backtrace()[$ikey]['file'] ) . 'config.json';
 		
-		if(file_exists($path)) {
-			$json = json_decode(file_get_contents($path));
+		if( file_exists( $path ) ) {
+			$json = json_decode( file_get_contents( $path ) );
 			$plugin_id = $json->id;
 			
-			if(empty($key))
+			if( empty( $key ) )
 				return $USER_DATA[$plugin_id];
 			
-			return !empty($USER_DATA[$plugin_id][$key]) ? $USER_DATA[$plugin_id][$key] : null;
+			return !empty( $USER_DATA[$plugin_id][$key] ) ? $USER_DATA[$plugin_id][$key] : null;
 		}
 		return null;
 	}
@@ -49,8 +49,8 @@
 	{
 		global $APP;
 		
-		if(!empty($key)) {
-			return !empty($APP[$key]) ? $APP[$key] : null;
+		if( !empty( $key ) ) {
+			return !empty( $APP[$key] ) ? $APP[$key] : null;
 		} else {
 			return $APP;
 		}
@@ -61,22 +61,22 @@
 	{
 		global $APP;
 		
-		$names = array_column($APP['plugins'], 'name');
-		dd($names ?? []);
+		$names = array_column( $APP['plugins'], 'name' );
+		dd( $names ?? [] );
 	}
 	
 	/** splits the query string in the url **/
 	function split_url($url)
 	{
-		return explode("/", $url);
+		return explode( "/", $url );
 	}
 	
 	function URL($key = '')
 	{
 		global $APP;
 		
-		if(is_numeric($key) || !empty($key)) {
-			if(!empty($APP['URL'][$key])) {
+		if( is_numeric( $key ) || !empty( $key ) ) {
+			if( !empty( $APP['URL'][$key] ) ) {
 				return $APP['URL'][$key];
 			}
 		} else {
@@ -89,9 +89,9 @@
 	{
 		$plugins_folder = 'plugins/';
 		$res = [];
-		$folders = scandir('plugins/');
-		foreach($folders as $folder) {
-			if($folder != '.' && $folder != '..' && is_dir($plugins_folder . $folder))
+		$folders = scandir( 'plugins/' );
+		foreach( $folders as $folder ) {
+			if( $folder != '.' && $folder != '..' && is_dir( $plugins_folder . $folder ) )
 				$res[] = $folder;
 		}
 		return $res;
@@ -103,16 +103,16 @@
 		
 		$loaded = false;
 		
-		foreach($plugin_folders as $folder) {
+		foreach( $plugin_folders as $folder ) {
 			
 			$file = 'plugins/' . $folder . '/config.json';
-			if(file_exists($file)) {
-				$json = json_decode(file_get_contents($file));
+			if( file_exists( $file ) ) {
+				$json = json_decode( file_get_contents( $file ) );
 				
-				if(is_object($json) && isset($json->id)) {
-					if(!empty($json->active)) {
+				if( is_object( $json ) && isset( $json->id ) ) {
+					if( !empty( $json->active ) ) {
 						$file = 'plugins/' . $folder . '/plugin.php';
-						if(file_exists($file) && valid_route($json)) {
+						if( file_exists( $file ) && valid_route( $json ) ) {
 							$json->index_file = $file;
 							$json->path = 'plugins/' . $folder . '/';
 							$json->http_path = ROOT . '/' . $json->path;
@@ -124,9 +124,9 @@
 			}
 		}
 		
-		if(!empty($APP['plugins'])) {
-			foreach($APP['plugins'] as $json) {
-				if(file_exists($json->index_file)) {
+		if( !empty( $APP['plugins'] ) ) {
+			foreach( $APP['plugins'] as $json ) {
+				if( file_exists( $json->index_file ) ) {
 					require $json->index_file;
 					$loaded = true;
 				}
@@ -137,15 +137,15 @@
 	
 	function valid_route(object $json): bool
 	{
-		if(!empty($json->routes->off) && is_array($json->routes->off)) {
-			if(in_array(page(), $json->routes->off))
+		if( !empty( $json->routes->off ) && is_array( $json->routes->off ) ) {
+			if( in_array( page(), $json->routes->off ) )
 				return false;
 		}
-		if(!empty($json->routes->on) && is_array($json->routes->on)) {
-			if($json->routes->on[0] == 'all')
+		if( !empty( $json->routes->on ) && is_array( $json->routes->on ) ) {
+			if( $json->routes->on[0] == 'all' )
 				return true;
 			
-			if(in_array(page(), $json->routes->on))
+			if( in_array( page(), $json->routes->on ) )
 				return true;
 		}
 		return false;
@@ -155,7 +155,7 @@
 	{
 		global $ACTIONS;
 		
-		while(!empty($ACTIONS[$hook][$priority])) {
+		while(!empty( $ACTIONS[$hook][$priority] )) {
 			$priority++;
 		}
 		
@@ -168,11 +168,11 @@
 	{
 		global $ACTIONS;
 		
-		if(!empty($ACTIONS[$hook])) {
-			ksort($ACTIONS[$hook]);
+		if( !empty( $ACTIONS[$hook] ) ) {
+			ksort( $ACTIONS[$hook] );
 			
-			foreach($ACTIONS[$hook] as $key => $func) {
-				$func($data);
+			foreach( $ACTIONS[$hook] as $key => $func ) {
+				$func( $data );
 			}
 		}
 	}
@@ -181,7 +181,7 @@
 	{
 		global $FILTER;
 		
-		while(!empty($FILTER[$hook][$priority])) {
+		while(!empty( $FILTER[$hook][$priority] )) {
 			$priority++;
 		}
 		
@@ -194,10 +194,10 @@
 	{
 		global $FILTER;
 		
-		if(!empty($FILTER[$hook])) {
-			ksort($FILTER[$hook]);
-			foreach($FILTER[$hook] as $key => $func) {
-				$data = $func($data);
+		if( !empty( $FILTER[$hook] ) ) {
+			ksort( $FILTER[$hook] );
+			foreach( $FILTER[$hook] as $key => $func ) {
+				$data = $func( $data );
 			}
 		}
 		
@@ -208,33 +208,33 @@
 	function dd($data)
 	{
 		echo "<pre><div style='margin:1; background-color:#444;color:white;padding: 6px 10px'>";
-		print_r($data);
+		print_r( $data );
 		echo "</div></pre>";
 	}
 	
 	function page()
 	{
-		return URL(0);
+		return URL( 0 );
 	}
 	
 	function redirect($url)
 	{
-		header("Location: " . ROOT . '/' . $url);
+		header( "Location: " . ROOT . '/' . $url );
 		die;
 	}
 	
 	function plugin_path(string $path = '')
 	{
 		$called_from = debug_backtrace();
-		$key = array_search(__FUNCTION__, array_column($called_from, 'function'));
-		return get_plugin_dir(debug_backtrace()[$key]['file']) . $path;
+		$key = array_search( __FUNCTION__, array_column( $called_from, 'function' ) );
+		return get_plugin_dir( debug_backtrace()[$key]['file'] ) . $path;
 	}
 	
 	function plugin_http_path(string $path = '')
 	{
 		$called_from = debug_backtrace();
-		$key = array_search(__FUNCTION__, array_column($called_from, 'function'));
-		return ROOT . DIRECTORY_SEPARATOR . get_plugin_dir(debug_backtrace()[$key]['file']) . $path;
+		$key = array_search( __FUNCTION__, array_column( $called_from, 'function' ) );
+		return ROOT . DIRECTORY_SEPARATOR . get_plugin_dir( debug_backtrace()[$key]['file'] ) . $path;
 	}
 	
 	function get_plugin_dir(string $filepath): string
@@ -242,11 +242,11 @@
 		
 		$path = "";
 		
-		$basename = basename($filepath);
-		$path = str_replace($basename, "", $filepath);
+		$basename = basename( $filepath );
+		$path = str_replace( $basename, "", $filepath );
 		
-		if(strstr($path, DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR)) {
-			$parts = explode(DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR, $path);
+		if( strstr( $path, DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR ) ) {
+			$parts = explode( DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR, $path );
 			$path = 'plugins' . DIRECTORY_SEPARATOR . $parts[1];
 		}
 		return $path;
@@ -261,10 +261,10 @@
 	function old_value(string $key, string $default = '', string $type = 'post'): string
 	{
 		$array = $_POST;
-		if($type == 'get')
+		if( $type == 'get' )
 			$array = $_GET;
 		
-		if(!empty($array[$key]))
+		if( !empty( $array[$key] ) )
 			return $array[$key];
 		
 		return $default;
@@ -273,14 +273,14 @@
 	function old_select(string $key, string $value, string $default = '', string $type = 'post'): string
 	{
 		$array = $_POST;
-		if($type == 'get')
+		if( $type == 'get' )
 			$array = $_GET;
 		
-		if(!empty($array[$key])) {
-			if($array[$key] == $value)
+		if( !empty( $array[$key] ) ) {
+			if( $array[$key] == $value )
 				return ' selected ';
 		} else {
-			if($default == $value)
+			if( $default == $value )
 				return ' selected ';
 		}
 		
@@ -290,14 +290,14 @@
 	function old_checked(string $key, string $value, string $default = '', string $type = 'post'): string
 	{
 		$array = $_POST;
-		if($type == 'get')
+		if( $type == 'get' )
 			$array = $_GET;
 		
-		if(!empty($array[$key])) {
-			if($array[$key] == $value)
+		if( !empty( $array[$key] ) ) {
+			if( $array[$key] == $value )
 				return ' checked ';
 		} else {
-			if($default == $value)
+			if( $default == $value )
 				return ' checked ';
 		}
 		
@@ -309,32 +309,32 @@
 		$key = '';
 		
 		$ses = new \Core\Session;
-		$key = hash('sha256', time() . rand(0, 99));
-		$expires = time() + ((60 * 60) * $hours);
+		$key = hash( 'sha256', time() . rand( 0, 99 ) );
+		$expires = time() + ( ( 60 * 60 ) * $hours );
 		
-		$ses->set($sesKey, [
+		$ses->set( $sesKey, [
 			'key' => $key,
 			'expires' => $expires
-		]);
+		] );
 		
 		return "<input type='hidden' value='$key' name='$sesKey' />";
 	}
 	
 	function csrf_verify(array $post, string $sesKey = 'csrf'): mixed
 	{
-		if(empty($post[$sesKey]))
+		if( empty( $post[$sesKey] ) )
 			return false;
 		
 		$ses = new \Core\Session;
-		$data = $ses->get($sesKey);
-		if(is_array($data)) {
-			if($data['key'] !== $post[$sesKey])
+		$data = $ses->get( $sesKey );
+		if( is_array( $data ) ) {
+			if( $data['key'] !== $post[$sesKey] )
 				return false;
 			
-			if($data['expires'] > time())
+			if( $data['expires'] > time() )
 				return true;
 			
-			$ses->pop($sesKey);
+			$ses->pop( $sesKey );
 			
 		}
 		
@@ -343,16 +343,16 @@
 	
 	function get_image(string $path = '', string $type = 'post')
 	{
-		if(file_exists($path))
+		if( file_exists( $path ) )
 			return ROOT . '/' . $path;
 		
-		if($type == "post")
+		if( $type == "post" )
 			return ROOT . '/assets/images/no_image.jpg';
 		
-		if($type == "male")
+		if( $type == "male" )
 			return ROOT . '/assets/images/user_male.jpg';
 		
-		if($type == "female")
+		if( $type == "female" )
 			return ROOT . '/assets/images/user_female.jpg';
 		
 		return ROOT . '/assets/images/no_image.jpg';
