@@ -1,12 +1,17 @@
 {
-  "name": "Home Page",
-  "id": "home-page",
-  "author": "",
-  "thumbnail": "thumbnail.jpg",
-  "active": true,
-  "index": 1,
-  "routes": {
-    "on": ["home"],
-    "off": []
-  }
+	"name":"New Plugin",
+	"id":"new-plugin",
+	"author":"Arismendi",
+	"author website":"",
+	"thumbnail":"thumbnail.jpg",
+	"active":true,
+	"index":1,
+	"routes": {
+		"on":["all"],
+		"off":[]
+	},
+	"dependencies": {
+
+	}
+
 }

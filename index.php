@@ -24,7 +24,7 @@
 	$PLUGINS = get_plugin_folders();
 	if(!load_plugins($PLUGINS))
 		
-		die("<center><h1 style='font-family: Tahoma'>¡No se encontraron complementos! coloque al menos un complemento en la carpeta de complementos</h1></center>");
+		die("<center><h1 style='font-family: Tahoma'>¡No se encontraron plugins! coloque al menos un plugin en la carpeta de plugins</h1></center>");
 	
 	$APP['permissions'] = do_filter('user_permissions', $APP['permissions']);
 	

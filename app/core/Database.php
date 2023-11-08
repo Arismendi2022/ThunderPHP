@@ -55,6 +55,9 @@
 		{
 			$query = do_filter('before_query_query', $query);
 			$data = do_filter('before_query_data', $data);
+
+			$this->error 			='';
+			$this->has_error 	= false;
 			
 			$con = $this->connect();
 			

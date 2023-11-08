@@ -41,4 +41,4 @@
 		define('ROOT', 'https://yourwebsite.com');
 
 	}
-	
+

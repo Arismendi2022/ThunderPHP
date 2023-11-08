@@ -2,7 +2,7 @@
 	
 	namespace Core;
 	
-	defined('ROOT') or die("Direct script access denied");
+	defined('ROOT') or die("Acceso directo al script denegado");
 	
 	/**
 	 * Request class

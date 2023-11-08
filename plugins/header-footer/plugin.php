@@ -1,31 +1,54 @@
 <?php
+
+/**
+ * Plugin name: 
+ * Description: 
+ * 
+ * 
+ **/
+
+set_value([
+
+	'plugin_route'	=>'my-plugin',
+	'table'			    =>'my_table',
+
+]);
+
+/** set user permissions for this plugin **/
+add_filter('permissions',function($permissions){
+
+	$permissions[] = 'my_permission';
+
+	return $permissions;
+});
+
+/** run this after a form submit **/
+add_action('controller',function(){
+
+	$vars = get_value();
+
+	require plugin_path('controllers/controller.php');
+});
+
+/** displays the view file **/
+add_action('view',function(){
+
+	$vars = get_value();
+
+	require plugin_path('views/view.php');
+});
+
+/** for manipulating data after a query operation **/
+add_filter('after_query',function($data){
 	
-	add_filter('user_permissions', function($permissions) {
-		
-		return $permissions;
-		
-	});
+	if(empty($data['result']))
+		return $data;
+
+	foreach ($data['result'] as $key => $row) {
 	
-	add_action('controller', function() {
-	
-	
-	});
-	
-	add_action('after_view', function() {
-		
-		require plugin_path('includes\footer.view.php');
-	});
-	
-	add_action('view', function() {
-		
-		/*$limit = 10;
-		$pager = new \Core\Pager($limit, 2);
-		$offset = $pager->offset;
-		$pager->display ();*/
-		
-	});
-	
-	add_action('before_view', function() {
-		
-		require plugin_path('includes\header.view.php');
-	});
+	}
+
+	return $data;
+});
+
+
