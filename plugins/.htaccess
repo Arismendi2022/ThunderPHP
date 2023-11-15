@@ -5,8 +5,6 @@
   Deny from all
 </Files>
 
-<Files ~ "^îndex\.php|css|js|.*\.png|.*\.jpg|.*\.jpeg|.*\.woff|.*\.woff2|.*\.ttf|.*\.txt|.*\.svg|.*\.gif|.*\.webp">
+<Files ~ "^index\.php|css|js|.*\.png|.*\.jpg|.*\.jpeg|.*\.woff|.*\.woff2|.*\.ttf|.*\.svg|.*\.gif|.*\.webp">
   Allow from all
 </Files>
-
-

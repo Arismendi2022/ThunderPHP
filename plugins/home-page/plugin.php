@@ -10,7 +10,7 @@
 set_value([
 
 	'plugin_route'	=>'my-plugin',
-	'table'			    =>'my_table',
+	'table'			=>'my_table',
 
 ]);
 
@@ -22,6 +22,7 @@ add_filter('permissions',function($permissions){
 	return $permissions;
 });
 
+
 /** run this after a form submit **/
 add_action('controller',function(){
 
@@ -29,6 +30,7 @@ add_action('controller',function(){
 
 	require plugin_path('controllers/controller.php');
 });
+
 
 /** displays the view file **/
 add_action('view',function(){
@@ -38,14 +40,17 @@ add_action('view',function(){
 	require plugin_path('views/view.php');
 });
 
+
 /** for manipulating data after a query operation **/
 add_filter('after_query',function($data){
+
 	
 	if(empty($data['result']))
 		return $data;
 
 	foreach ($data['result'] as $key => $row) {
 	
+
 	}
 
 	return $data;

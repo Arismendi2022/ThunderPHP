@@ -1,11 +1,11 @@
 {
 	"name":"New Plugin",
 	"id":"new-plugin",
-	"author":"Arismendi",
+	"author":"",
 	"author website":"",
 	"thumbnail":"thumbnail.jpg",
 	"active":true,
-	"index":1,
+	"index":4,
 	"routes": {
 		"on":["all"],
 		"off":[]

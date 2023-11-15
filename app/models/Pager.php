@@ -1,17 +1,19 @@
 <?php
 	
 	namespace Core;
-	
+
+	defined('ROOT') or die("Acceso directo al script denegado");
+
 	/**
 	 * Pager class
 	 */
 	class Pager
 	{
-		public $links = [];
-		public $limit = 10;
-		public $offset = 0;
-		public $start = 1;
-		public $end = 1;
+		public $links 			= [];
+		public $limit 			= 10;
+		public $offset 			= 0;
+		public $start 			= 1;
+		public $end 				= 1;
 		public $page_number = 1;
 		
 		

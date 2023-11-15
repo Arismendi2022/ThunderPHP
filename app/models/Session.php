@@ -12,22 +12,21 @@
 		private $varKey = 'APP';
 		private $userKey = 'USER';
 		
-		private function starSession(): int
+		private function startSession() :int
 		{
-			
-			if(session_status() === PHP_SESSION_NONE)
+			if (session_status() === PHP_SESSION_NONE)
 				session_start();
 			
 			return 1;
 			
 		}
 		
-		public function set(string|array $keyOrArray, mixed $value = null): bool
+		public function set(string|array $keyOrArray, mixed $value = null) :bool
 		{
-			$this->starSession();
-			if(is_array($keyOrArray)) {
+			$this->startSession();
+			if (is_array($keyOrArray)) {
 				
-				foreach($keyOrArray as $key => $value) {
+				foreach ($keyOrArray as $key => $value) {
 					$_SESSION[$this->varKey][$key] = $value;
 				}
 				return true;
@@ -38,10 +37,10 @@
 			return false;
 		}
 		
-		public function get(string $key): mixed
+		public function get(string $key) :mixed
 		{
-			$this->starSession();
-			if(!empty($_SESSION[$this->varKey][$key])) {
+			$this->startSession();
+			if (!empty($_SESSION[$this->varKey][$key])) {
 				return $_SESSION[$this->varKey][$key];
 				
 			}
@@ -49,11 +48,10 @@
 			return false;
 		}
 		
-		public function pop(string $key): mixed
+		public function pop(string $key) :mixed
 		{
-			$this->starSession();
-			if(!empty($_SESSION[$this->varKey][$key]))
-			{
+			$this->startSession();
+			if (!empty($_SESSION[$this->varKey][$key])) {
 				$var = $_SESSION[$this->varKey][$key];
 				unset($_SESSION[$this->varKey][$key]);
 				
@@ -63,77 +61,89 @@
 			return false;
 		}
 		
-		public function auth(object|array $row): bool
+		public function auth(object|array $row) :bool
 		{
-			$this->starSession();
+			$this->startSession();
 			$_SESSION[$this->varKey] = $row;
 			
 			return false;
 		}
 		
-		public function is_logged_in(): bool
+		public function is_admin() :bool
 		{
-			$this->starSession();
-			
-			if(!empty($_SESSION[$this->userKey]))
+			if (!$this->is_logged_in())
 				return false;
 			
-			if(is_object($_SESSION[$this->userKey]))
-				return true;
+			$arr = do_filter('before_check_admin', ['is_admin' => false]);
 			
-			if(is_array($_SESSION[$this->userKey]))
+			if ($arr['is_admin'])
 				return true;
 			
 			return false;
 		}
 		
-		public function reset(): bool
+		public function is_logged_in() :bool
 		{
-			session_regenerate_id();
+			$this->startSession();
+			
+			if (empty($_SESSION[$this->userKey]))
+				return false;
+			
+			if (is_object($_SESSION[$this->userKey]))
+				return true;
+			
+			if (is_array($_SESSION[$this->userKey]))
+				return true;
+			
+			return false;
+		}
+		
+		public function reset() :bool
+		{
 			session_destroy();
+			session_regenerate_id();
 			
 			return true;
 		}
 		
-		public function logout(): bool
+		public function logout() :bool
 		{
-			$this->starSession();
+			$this->startSession();
 			
-			if(!empty($_SESSION[$this->userKey]))
+			if (!empty($_SESSION[$this->userKey]))
 				unset($_SESSION[$this->userKey]);
 			
 			return true;
 		}
 		
-		public function user(string $key = ''): mixed
+		public function user(string $key = '') :mixed
 		{
-			$this->starSession();
+			$this->startSession();
 			
-			if(!empty($_SESSION[$this->userKey])) {
-				if(empty($key))
+			if (!empty($_SESSION[$this->userKey])) {
+				if (empty($key))
 					$_SESSION[$this->userKey];
 				
-				if(is_object($_SESSION[$this->userKey])) {
+				if (is_object($_SESSION[$this->userKey])) {
 					
-					if(!empty($_SESSION[$this->userKey]->$key))
+					if (!empty($_SESSION[$this->userKey]->$key))
 						return $_SESSION[$this->userKey]->$key;
 					
 				} else
-					if(is_array($_SESSION[$this->userKey])) {
-						if(!empty($_SESSION[$this->userKey][$key]))
+					if (is_array($_SESSION[$this->userKey])) {
+						if (!empty($_SESSION[$this->userKey][$key]))
 							return $_SESSION[$this->userKey][$key];
 						
 					}
 			}
 			
 			return null;
-			
 		}
 		
-		public function all(): mixed
+		public function all() :mixed
 		{
-			$this->starSession();
-			if(!empty($_SESSION[$this->varKey][$key])) {
+			$this->startSession();
+			if (!empty($_SESSION[$this->varKey][$key])) {
 				return $_SESSION[$this->varKey][$key];
 				
 			}

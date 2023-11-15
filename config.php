@@ -2,7 +2,7 @@
 
 	define('DEBUG', true);
 
-	define('APP_NAME', 'pluginPHP app');
+	define('APP_NAME', 'PluginPHP app');
 	define('APP_DESCRIPTION', 'The best website');
 
 	if ((empty($_SERVER['SERVER_NAME']) && strpos(PHP_SAPI, 'cgi') !== 0) || (!empty($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'localhost')) {

@@ -1,7 +1,9 @@
 <?php
 	
 	namespace Migration;
-	
+
+	defined('FCPATH') or die("Acceso directo al script denegado");
+
 	use \Core\Database;
 	
 	/**
@@ -9,16 +11,16 @@
 	 */
 	class Migration extends Database
 	{
-		private $columns = [];
-		private $keys = [];
-		private $data = [];
-		private $primaryKeys = [];
-		private $foreignKeys = [];
-		private $uniqueKeys = [];
+		private $columns      = [];
+		private $keys         = [];
+		private $data         = [];
+		private $primaryKeys  = [];
+		private $foreignKeys  = [];
+		private $uniqueKeys   = [];
 		private $fullTextKeys = [];
 		
 		
-		public function createTable()
+		public function createTable(string $table)
 		{
 			if (!empty($this->columns)) {
 				
@@ -48,17 +50,17 @@
 				
 				$this->query ($query);
 				
-				$this->$columns = [];
-				$this->$keys = [];
-				$this->$data = [];
-				$this->$primaryKeys = [];
-				$this->$foreignKeys = [];
-				$this->$uniqueKeys = [];
-				$this->$fullTextKeys = [];
+				$this->columns      = [];
+				$this->keys         = [];
+				$this->data         = [];
+				$this->primaryKeys  = [];
+				$this->foreignKeys  = [];
+				$this->uniqueKeys   = [];
+				$this->fullTextKeys = [];
 				
-				echo "\n\r Table $table creado exitosamente!";
+				echo "\n\rTabla $table creada exitosamente!";
 			} else {
-				echo "\n\r ¡No se encontraron datos de columna! No se pudo crear la tabla: $table";
+				echo "\n\r¡No se encontraron datos de columna! No se pudo crear la tabla: $table";
 			}
 			
 		}
@@ -70,49 +72,59 @@
 					
 					$key = array_keys ($row);
 					$columns_string = implode (",", $key);
-					$values_string = ':' . implode(",:", $keu);
+					$values_string = ':' . implode(",:", $key);
 					
 				    $query = "INSERT INTO $table ($columns_string) VALUES ($values_string)";
 						$this->query ($query, $row);
 				}
 				
 				$this->data = [];
-				echo "\n\r Datos insertados exitosamente en la tabla: $table";
+				echo "\n\rDatos insertados exitosamente en la tabla: $table";
 			} else {
-				echo "\n\r ¡No se encontraron datos de fila! No hay datos insertados en la tabla.: $table";
+				echo "\n\r¡No se encontraron datos de fila! No hay datos insertados en la tabla.: $table";
 			}
 		}
 		
 		public function addColumn(string $column)
 		{
 			
-			$this->$columns[] = $column;
+			$this->columns[] = $column;
 		}
 		
 		public function addKey(string $key)
 		{
 			
-			$this->$keys[] = $key;
+			$this->keys[] = $key;
 		}
 		
 		public function addPrimaryKey(string $primaryKey)
 		{
 			
-			$this->$primaryKeys[] = $primaryKey;
+			$this->primaryKeys[] = $primaryKey;
+		}
+
+		public function addUniqueKey(string $key)
+		{
+			$this->uniqueKeys[] = $key;
+		}
+
+		public function addFullTextKey(string $key)
+		{
+			$this->fullTextKeys[] = $key;
 		}
 		
 		public function addData(string $data)
 		{
 			
-			$this->$data[] = $data;
+			$this->data[] = $data;
 		}
 		
-		public function drop()
+		public function dropTable(string $table)
 		{
 			$query = "DROP TABLE IF EXISTS $table";
 			$this->query ($query);
 			
-			echo "\n\r Table $table ¡borrado exitosamente!";
+			echo "\n\rTabla $table ¡borrada exitosamente!";
 			
 		}
 		

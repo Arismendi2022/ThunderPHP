@@ -75,7 +75,9 @@
 		
 		public function update(string|int $my_id, array $data)
 		{
-			if(!empty($this->allowedUpdateColumns)) {
+			if(!empty($this->allowedUpdateColumns) || !empty($this->allowedColumns))
+			{
+				$this->allowedUpdateColumns = empty($this->allowedUpdateColumns) ? $this->allowedColumns : $this->allowedUpdateColumns;
 				foreach($data as $key => $value) {
 					if(!in_array($key, $this->allowedUpdateColumns)) {
 						unset($data[$key]);

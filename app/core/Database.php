@@ -12,11 +12,11 @@
 	 */
 	class Database
 	{
-		private static $query_id = '';
-		public $affected_rows = 0;
-		public $insert_id     = 0;
-		public $error         = '';
-		public $has_error     = false;
+		private static $query_id  = '';
+		public $affected_rows     = 0;
+		public $insert_id         = 0;
+		public $error             = '';
+		public $has_error         = false;
 		
 		private function connect()
 		{
@@ -54,43 +54,40 @@
 		public function query(string $query, array $data = [], string $data_type = 'object')
 		{
 			$query = do_filter('before_query_query', $query);
-			$data = do_filter('before_query_data', $data);
-
-			$this->error 			='';
-			$this->has_error 	= false;
+			$data  = do_filter('before_query_data', $data);
+			
+			$this->error     = '';
+			$this->has_error = false;
 			
 			$con = $this->connect();
 			
-			try
-			{
+			try {
 				$stm = $con->prepare($query);
 				
-				$result = $stm->execute($data);
-				$this->affected_rows 	= $stm->rowCount();
-				$this->insert_id 		= $con->lastInsertId();
+				$result              = $stm->execute($data);
+				$this->affected_rows = $stm->rowCount();
+				$this->insert_id     = $con->lastInsertId();
 				
-				if($result)
-				{
-					if($data_type == 'object'){
+				if($result) {
+					if($data_type == 'object') {
 						$rows = $stm->fetchAll(PDO::FETCH_OBJ);
-					}else{
+					} else {
 						$rows = $stm->fetchAll(PDO::FETCH_ASSOC);
 					}
 					
 				}
 				
-			}catch(PDOException $e)
-			{
-				$this->error 				= $e->getMessage();
-				$this->has_error 		= true;
+			} catch(PDOException $e) {
+				$this->error     = $e->getMessage();
+				$this->has_error = true;
 			}
 			
-			$arr = [];
-			$arr['query'] = $query;
-			$arr['data'] = $data;
-			$arr['result'] = $rows ?? [];
+			$arr             = [];
+			$arr['query']    = $query;
+			$arr['data']     = $data;
+			$arr['result']   = $rows ?? [];
 			$arr['query_id'] = self::$query_id;
-			self::$query_id = '';
+			self::$query_id  = '';
 			
 			$result = do_filter('after_query', $arr);
 			
