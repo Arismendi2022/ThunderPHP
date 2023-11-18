@@ -10,6 +10,7 @@
 	/**
 	 * Database class
 	 */
+	
 	class Database
 	{
 		private static $query_id  = '';
@@ -17,6 +18,7 @@
 		public $insert_id         = 0;
 		public $error             = '';
 		public $has_error         = false;
+		public $table_exists_db   = '';
 		
 		private function connect()
 		{
@@ -27,6 +29,7 @@
 			$VARS['DB_DRIVER']   = DB_DRIVER;
 			
 			$VARS = do_filter('before_db_connect', $VARS);
+			$this->table_exists_db = $VARS['DB_NAME'];
 			
 			$string = "$VARS[DB_DRIVER]:hostname=$VARS[DB_HOST];dbname=$VARS[DB_NAME]";
 			
@@ -104,20 +107,30 @@
 			
 			if(empty($APP['tables'])){
 				
-				$result = $APP['tables'] = $this->query($query);
-			
+				$this->error     = '';
+				$this->has_error = false;
+				
+				$con = $this->connect();
+				
+				$query = "SELECT TABLE_NAME AS tables FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . $this->table_exists_db . "'";
+				
+				$res    = $this->query($query);
+				$result = $APP['tables'] = $res['result'];
 			} else{
 				$result = $APP['tables'];
 			}
+			
 			if($result){
+				$all_tables = array_column($result, 'tables');
+				
 				if(is_string($mytables)) $mytables = [$mytables];
 				
 				$count = 0;
 				foreach($mytables as $key => $table){
-					if(in_array($table, $APP['tables'])) $count++;
+					if(in_array($table, $all_tables)) $count++;
 				}
 				
-				if($count == count($APP['tables'])) return true;
+				if($count == count($mytables)) return true;
 			}
 			
 			return false;
