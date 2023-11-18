@@ -30,11 +30,11 @@
 			
 			$string = "$VARS[DB_DRIVER]:hostname=$VARS[DB_HOST];dbname=$VARS[DB_NAME]";
 			
-			try {
+			try{
 				$con = new PDO($string, $VARS['DB_USER'], $VARS['DB_PASSWORD']);
 				$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				
-			} catch(PDOException $e) {
+			} catch(PDOException $e){
 				die("No se pudo conectar a la base de datos con error " . $e->getMessage());
 				
 			}
@@ -44,7 +44,7 @@
 		public function get_row(string $query, array $data = [], string $data_type = 'object')
 		{
 			$result = $this->query($query, $data, $data_type);
-			if(is_array($result) && count($result) > 0) {
+			if(is_array($result) && count($result) > 0){
 				return $result[0];
 			}
 			return false;
@@ -61,23 +61,23 @@
 			
 			$con = $this->connect();
 			
-			try {
+			try{
 				$stm = $con->prepare($query);
 				
 				$result              = $stm->execute($data);
 				$this->affected_rows = $stm->rowCount();
 				$this->insert_id     = $con->lastInsertId();
 				
-				if($result) {
-					if($data_type == 'object') {
+				if($result){
+					if($data_type == 'object'){
 						$rows = $stm->fetchAll(PDO::FETCH_OBJ);
-					} else {
+					} else{
 						$rows = $stm->fetchAll(PDO::FETCH_ASSOC);
 					}
 					
 				}
 				
-			} catch(PDOException $e) {
+			} catch(PDOException $e){
 				$this->error     = $e->getMessage();
 				$this->has_error = true;
 			}
@@ -91,13 +91,37 @@
 			
 			$result = do_filter('after_query', $arr);
 			
-			if(is_array($result) && count($result) > 0) {
+			if(is_array($result) && count($result) > 0){
 				return $result;
 			}
 			
 			return false;
 		}
 		
+		public function table_exists(string|array $mytables):bool
+		{
+			global $APP;
+			
+			if(empty($APP['tables'])){
+				
+				$result = $APP['tables'] = $this->query($query);
+			
+			} else{
+				$result = $APP['tables'];
+			}
+			if($result){
+				if(is_string($mytables)) $mytables = [$mytables];
+				
+				$count = 0;
+				foreach($mytables as $key => $table){
+					if(in_array($table, $APP['tables'])) $count++;
+				}
+				
+				if($count == count($APP['tables'])) return true;
+			}
+			
+			return false;
+		}
 		
 	}
 	

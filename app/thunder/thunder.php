@@ -73,7 +73,7 @@
 				}
 				
 				/*view file*/
-				$view_file = $folder . '/views/view.php';
+				$view_file = $folder . '/views/single-post.php';
 				$view_file_source = 'app/thunder/samples/view-sample.php';
 				
 				if(file_exists($view_file_source)) {

@@ -1,13 +1,13 @@
 {
-	"name":"Home Page",
-	"id":"home-page",
+	"name":"Page Not found",
+	"id":"404",
 	"author":"Arismendi",
 	"author website":"www.freephptutorials.com",
 	"thumbnail":"thumbnail.jpg",
 	"active":true,
 	"index":1,
 	"routes": {
-		"on":["home"],
+		"on":["404"],
 		"off":[]
 	},
 	"dependencies": {

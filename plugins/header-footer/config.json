@@ -1,8 +1,8 @@
 {
-	"name":"New Plugin",
-	"id":"new-plugin",
-	"author":"",
-	"author website":"",
+	"name":"Header footer",
+	"id":"header-footer",
+	"author":"Arismendi",
+	"author website":"www.freephptutorials.com",
 	"thumbnail":"thumbnail.jpg",
 	"active":true,
 	"index":1,

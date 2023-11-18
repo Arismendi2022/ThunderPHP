@@ -1,8 +1,11 @@
-<link rel="stylesheet" type="text/css" href="<?=plugin_http_path('assets/css/style.css')?>">
+<link rel="stylesheet" type="text/css" href="<?= plugin_http_path('assets/css/style.css') ?>">
 
-<div style="padding:20px;max-width: 600px;margin:auto;background: #eee;">
-	<center><h3>This is a plugin</h3></center>
-	<center>This plugin is being rendered from the file: <?=plugin_path('views/view.php')?></center>
+<div class="col-md-10 mx-auto p-4">
+	<center>
+		<h1>Bienvenido a ThunderPHP</h1>
+		<div><i>Un plugin basado en PHP framework</i></div>
+		<img src="<?= plugin_http_path('assets/images/puzzle.png') ?>" style="width: 100%; max-width: 450px;">
+	</center>
 </div>
 
-<script src="<?=plugin_http_path('assets/js/plugin.js')?>"></script>
+<script src="<?= plugin_http_path('assets/js/plugin.js') ?>"></script>

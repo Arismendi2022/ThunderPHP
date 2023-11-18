@@ -49,4 +49,5 @@
 	{
 		$this->dropTable('{TABLE_NAME}');
 	}
+	
 	}
