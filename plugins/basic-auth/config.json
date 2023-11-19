@@ -1,0 +1,17 @@
+{
+	"name":"Basic Authentication",
+	"id":"basic-auth",
+	"author":"Arismendi",
+	"author website":"",
+	"thumbnail":"thumbnail.jpg",
+	"active":true,
+	"index":1,
+	"routes": {
+		"on":["login","signup"],
+		"off":[]
+	},
+	"dependencies": {
+
+	}
+
+}

@@ -4,7 +4,7 @@
 	<center>
 		<h1>Bienvenido a ThunderPHP</h1>
 		<div><i>Un plugin basado en PHP framework</i></div>
-		<img src="<?= plugin_http_path('assets/images/puzzle.png') ?>" style="width: 100%; max-width: 450px;">
+		<img src="<?= plugin_http_path('assets/images/puzzle.png') ?>" style="width: 100%; max-width: 500px; margin-top: 50px;">
 	</center>
 </div>
 
