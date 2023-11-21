@@ -6,29 +6,51 @@
 		<h3 class="text-center mt-4">Registro</h3>
 		<div class="text-muted text-center mb-4"><i>Por favor ingresa tus datos</i></div>
 		
-		<div class="form-floating my-3">
-			<input type="email" class="form-control" id="floatingInput" placeholder="nombre@example.com" style="border-radius: 20px;">
+		<div class="form-floating my-2">
+			<input value="<?= old_value('first_name') ?>" name="first_name" type="text" class="form-control" id="floatingInput" placeholder="nombre@example.com"
+						 style="border-radius:
+				20px;">
 			<label for="floatingInput">Nombres </label>
+			<?php if(!empty($errors['first_name'])): ?>
+				<small class="text-danger px-2"><?= $errors['first_name'] ?></small>
+			<?php endif ?>
 		</div>
 		
-		<div class="form-floating my-3">
-			<input type="email" class="form-control" id="floatingInput" placeholder="nombre@example.com" style="border-radius: 20px;">
+		<div class="form-floating my-2">
+			<input value="<?= old_value('last_name') ?>" name="last_name" type="text" class="form-control" id="floatingInput" placeholder="nombre@example.com"
+						 style="border-radius:
+				20px;">
 			<label for="floatingInput">Apellidos </label>
+			<?php if(!empty($errors['last_name'])): ?>
+				<small class="text-danger px-2"><?= $errors['last_name'] ?></small>
+			<?php endif ?>
 		</div>
 		
-		<div class="form-floating my-3">
-			<input type="email" class="form-control" id="floatingInput" placeholder="nombre@example.com" style="border-radius: 20px;">
+		<div class="form-floating my-2">
+			<input value="<?= old_value('email') ?>" name="email" type="email" class="form-control" id="floatingInput" placeholder="nombre@example.com"
+						 style="border-radius: 20px;">
 			<label for="floatingInput">Dirección Correo </label>
+			<?php if(!empty($errors['email'])): ?>
+				<small class="text-danger px-2"><?= $errors['email'] ?></small>
+			<?php endif ?>
 		</div>
 		
-		<div class="form-floating my-3">
-			<input type="password" class="form-control" id="floatingPassword" placeholder="contraseña" style="border-radius: 20px;">
+		<div class="form-floating my-2">
+			<input value="<?= old_value('password') ?>" name="password" type="password" class="form-control" id="floatingPassword" placeholder="contraseña"
+						 style="border-radius: 20px;">
 			<label for="floatingPassword">Contraseña</label>
+			<?php if(!empty($errors['password'])): ?>
+				<small class="text-danger px-2"><?= $errors['password'] ?></small>
+			<?php endif ?>
 		</div>
 		
-		<div class="form-floating my-3">
-			<input type="password" class="form-control" id="floatingPassword" placeholder="contraseña" style="border-radius: 20px;">
+		<div class="form-floating my-2">
+			<input value="<?= old_value('retype_password') ?>" name="retype_password" type="password" class="form-control" id="floatingPassword" placeholder="contraseña"
+						 style="border-radius: 20px;">
 			<label for="floatingPassword">Confirmar Contraseña</label>
+			<?php if(!empty($errors['retype_password'])): ?>
+				<small class="text-danger px-2"><?= $errors['retype_password'] ?></small>
+			<?php endif ?>
 		</div>
 		
 		<div class="d-flex justify-content-between px-2">

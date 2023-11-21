@@ -47,7 +47,7 @@ defined('ROOT') or die("Acceso directo al script denegado");
 		public function validate_update(array $data):bool
 		{
 			$email_arr = [
-				'email'=>$data['email'];
+				'email'=>$data['email']
 			];
 
 			$email_arr_not = [

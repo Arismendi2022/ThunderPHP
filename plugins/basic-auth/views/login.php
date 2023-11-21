@@ -13,12 +13,19 @@
 		<h3 class="text-center mt-4">Iniciar Sesión</h3>
 		<div class="text-muted text-center mb-4"><i>Por favor inicie sesión para continuar</i></div>
 		
+		<div class="alert alert-danger text-center">
+			This is an error
+		</div>
+		
 		<div class="form-floating my-4">
-			<input type="email" class="form-control" id="floatingInput" placeholder="nombre@example.com" style="border-radius: 20px;">
+			<input value="<?= old_value('email') ?>" name ="email" type="email" class="form-control" id="floatingInput" placeholder="nombre@example.com" style="border-radius:
+				20px;">
 			<label for="floatingInput">Dirección Correo </label>
 		</div>
 		<div class="form-floating my-4">
-			<input type="password" class="form-control" id="floatingPassword" placeholder="contraseña" style="border-radius: 20px;">
+			<input value="<?= old_value('password') ?>" name ="password" type="password" class="form-control" id="floatingPassword" placeholder="contraseña"
+						 style="border-radius:
+				20px;">
 			<label for="floatingPassword">Contraseña</label>
 		</div>
 		
