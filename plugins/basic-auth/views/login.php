@@ -3,6 +3,8 @@
 <main class="p-4" style="background-color: #dde5f4; height: 100vh">
 	<form method="post" class="col-xl-3 col-lg-4 col-md-6 col-sm-8 mx-auto p-4 shadow" style="border-radius: 30px; background-color: #f1f7fe">
 		
+		<?= csrf() ?>
+		
 		<div class="text-center">
 			<svg fill="#3d4785" style="border-radius: 50%;" width="80" height="80" viewBox="0 0 24 24">
 				<path
@@ -13,28 +15,30 @@
 		<h3 class="text-center mt-4">Iniciar Sesión</h3>
 		<div class="text-muted text-center mb-4"><i>Por favor inicie sesión para continuar</i></div>
 		
-		<div class="alert alert-danger text-center">
-			This is an error
-		</div>
+		<?php if(message()): ?>
+			<div class="alert alert-danger text-center">
+				<?= esc(message('',true)) ?>
+			</div>
+		<?php endif ?>
 		
 		<div class="form-floating my-4">
-			<input value="<?= old_value('email') ?>" name ="email" type="email" class="form-control" id="floatingInput" placeholder="nombre@example.com" style="border-radius:
-				20px;">
+			<input value="<?= old_value('email') ?>" name="email" type="email" class="form-control" id="floatingInput" placeholder="nombre@example.com" style="border-radius:
+				30px;">
 			<label for="floatingInput">Dirección Correo </label>
 		</div>
 		<div class="form-floating my-4">
-			<input value="<?= old_value('password') ?>" name ="password" type="password" class="form-control" id="floatingPassword" placeholder="contraseña"
+			<input value="<?= old_value('password') ?>" name="password" type="password" class="form-control" id="floatingPassword" placeholder="contraseña"
 						 style="border-radius:
-				20px;">
+				30px;">
 			<label for="floatingPassword">Contraseña</label>
 		</div>
 		
 		<div class="d-flex justify-content-between px-2">
 			<a href="<?= ROOT ?>/<?= $vars['forgot_page'] ?>">Has olvidado tu contraseña?</a>
-			<a href="<?= ROOT ?>/<?= $vars['signup_page'] ?>"">o Regístrate</a>
+			<a href="<?= ROOT ?>/<?= $vars['signup_page'] ?>">o Regístrate</a>
 		</div>
 		
-		<button class="bnt text-white px-4 py-3 w-100 my-4" style="  border-radius: 25px; background-color: #3d4785;">Ingresar</button>
+		<button class="bnt text-white px-4 py-3 w-100 my-4" style="  border-radius: 30px; background-color: #3d4785;">Ingresar</button>
 	
 	</form>
 </main>

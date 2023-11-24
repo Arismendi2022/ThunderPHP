@@ -7,7 +7,8 @@
 	/**
 	 * Users class
 	 */
-	class Users extends Migration{
+	class Users extends Migration
+	{
 		
 		public function up()
 		{
@@ -16,6 +17,7 @@
 			$this->addColumn('first_name varchar(30) null');
 			$this->addColumn('last_name varchar(30) null');
 			$this->addColumn('image varchar(1024) null');
+			$this->addColumn('gender varchar(9) null');
 			$this->addColumn('email varchar(100) null');
 			$this->addColumn('password varchar(255) null');
 			
@@ -25,7 +27,7 @@
 			$this->addColumn('date_deleted datetime default null');
 			
 			$this->addPrimaryKey('id');
-			$this->addKey('firs_name');
+			$this->addKey('first_name');
 			$this->addKey('last_name');
 			$this->addKey('email');
 			$this->addKey('deleted');
@@ -45,7 +47,8 @@
 				'last_name' => 'Admin',
 				'email' => 'email@email.com',
 				'password' => password_hash('password',PASSWORD_DEFAULT),
-				'gender' => 'male',
+				'gender' => 'masculino',
+				'date_created' => date('Y-m-d H:i:s'),
 			]);
 			
 			$this->insert('users');

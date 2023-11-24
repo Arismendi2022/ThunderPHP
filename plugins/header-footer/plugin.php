@@ -17,7 +17,9 @@
 		$link->id    = 0;
 		$link->title = 'Home';
 		$link->slug  = 'home';
-		$links[]     = $link;
+		$link->icon  = '';
+		$link->permission  = '';
+		$links[] = $link;
 		
 		$links = do_filter(plugin_id() . '_before_menu_links',$links);
 		

@@ -64,7 +64,7 @@
 		public function auth(object|array $row) :bool
 		{
 			$this->startSession();
-			$_SESSION[$this->varKey] = $row;
+			$_SESSION[$this->userKey] = $row;
 			
 			return false;
 		}

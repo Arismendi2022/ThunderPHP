@@ -399,6 +399,7 @@
 		$ses  = new \Core\Session;
 		$data = $ses->get($sesKey);
 		if(is_array($data)){
+			
 			if($data['key'] !== $post[$sesKey])
 				return false;
 			

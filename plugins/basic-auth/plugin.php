@@ -12,6 +12,7 @@
 		'login_page' => 'login',
 		'signup_page' => 'signup',
 		'forgot_page' => 'forgot',
+		'logout_page' => 'logout',
 		'tables' => [
 		],
 	
@@ -21,16 +22,24 @@
 		
 		$vars = get_value();
 		$req  = new \Core\Request;
+		$ses = new \Core\Session;
+		
 		
 		if($req->posted() && page() == $vars['login_page'])
 			require plugin_path('controllers/login-controller.php');
+		
 		else if($req->posted() && page() == $vars['signup_page'])
 			require plugin_path('controllers/signup-controller.php');
+		
+		else if(page() == $vars['logout_page'])
+			require plugin_path('controllers/logout-controller.php');
 		
 	});
 	
 	/** add menu links **/
 	add_filter('header-footer_before_menu_links',function($links){
+		
+		$ses = new \Core\Session;
 		
 		$link             = (object)[];
 		$link->id         = 0;
@@ -46,7 +55,22 @@
 		$link->slug       = 'signup';
 		$link->icon       = '';
 		$link->permission = 'not_logged_in';
+		$links[] = $link;
 		
+		$link               = (object)[];
+		$link->id           = 0;
+		$link->title        = 'Logout';
+		$link->slug         = 'logout';
+		$link->icon         = '';
+		$link->permission   = 'logged_in';
+		$links[] = $link;
+		
+		$link               = (object)[];
+		$link->id           = 0;
+		$link->title        = 'Hi, ' . $ses->user('first_name');
+		$link->slug         = 'profile/'. $ses->user('id');
+		$link->icon         = '';
+		$link->permission   = 'logged_in';
 		$links[] = $link;
 		
 		return $links;

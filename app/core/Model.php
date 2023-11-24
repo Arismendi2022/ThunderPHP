@@ -19,82 +19,87 @@
 		public $offset = 0;
 		public $errors = [];
 		
-		public function where(array $where_array = [], array $where_not_array = [], string $data_type = 'object'): array|bool
+		public function where(array $where_array = [],array $where_not_array = [],string $data_type = 'object'):array|bool
 		{
 			$query = "select * from $this->table where ";
 			
-			if(!empty($where_array)) {
-				foreach($where_not_array as $key => $value) {
+			if(!empty($where_array)){
+				foreach($where_array as $key => $value){
+					$query .= $key . '= :' . $key . ' && ';
+				}
+			}
+			
+			if(!empty($where_not_array)){
+				foreach($where_not_array as $key => $value){
 					$query .= $key . ' != :' . $key . ' && ';
 				}
 			}
-			$query = trim($query, ' && ');
-			$query = " order by $this->order_column $this->order kimit $limit offset $ofgset";
 			
-			$data = array_merge($where_array, $where_not_array);
+			$query = trim($query,' && ');
+			$query .= " order by $this->order_column $this->order limit $this->limit offset $this->offset";
 			
-			return $this->query($query, $data);
+			$data = array_merge($where_array,$where_not_array);
 			
+			return $this->query($query,$data);
 		}
 		
-		public function first(array $where_array = [], array $where_not_array = [], string $data_type = 'object'): array|bool
+		public function first(array $where_array = [],array $where_not_array = [],string $data_type = 'object'):object|bool
 		{
-			$row = $this->where($where_array, $where_not_array, $data_type);
-			if(!empty($row))
-				return $row[0];
+			$rows = $this->where($where_array,$where_not_array,$data_type);
+			if(!empty($rows))
+				return $rows[0];
 			
 			return false;
 		}
 		
-		public function getAll(string $data_type = 'object'): array|bool
+		public function getAll(string $data_type = 'object'):array|bool
 		{
 			$query = "select * from $this->table order by $this->order_column $this->order limit $limit offset $offset";
-			return $this->where($query, [], $data_type);
+			return $this->where($query,[],$data_type);
 			
 		}
 		
 		public function insert(array $data)
 		{
-			if(!empty($this->allowedColumns)) {
-				foreach($data as $key => $value) {
-					if(!in_array($key, $this->allowedColumns)) {
+			if(!empty($this->allowedColumns)){
+				foreach($data as $key => $value){
+					if(!in_array($key,$this->allowedColumns)){
 						unset($data[$key]);
 					}
 				}
 			}
 			
-			if(!empty($data)) {
+			if(!empty($data)){
 				$key = array_keys($data);
 				
-				$query = "insert into $this->table(" . implode(",", $key) . ") values(:" . implode(",:", $key) . ")";
-				return $this->query($query, $data);
+				$query = "insert into $this->table(" . implode(",",$key) . ") values(:" . implode(",:",$key) . ")";
+				return $this->query($query,$data);
 			}
 			return false;
 			
 		}
 		
-		public function update(string|int $my_id, array $data)
+		public function update(string|int $my_id,array $data)
 		{
-			if(!empty($this->allowedUpdateColumns) || !empty($this->allowedColumns))
-			{
+			if(!empty($this->allowedUpdateColumns) || !empty($this->allowedColumns)){
 				$this->allowedUpdateColumns = empty($this->allowedUpdateColumns) ? $this->allowedColumns : $this->allowedUpdateColumns;
-				foreach($data as $key => $value) {
-					if(!in_array($key, $this->allowedUpdateColumns)) {
+				foreach($data as $key => $value){
+					if(!in_array($key,$this->allowedUpdateColumns)){
 						unset($data[$key]);
 					}
 				}
 			}
 			
-			if(!empty($data)) {
+			if(!empty($data)){
 				$query = "update $this->table ";
-				foreach($data as $key => $value) {
+				foreach($data as $key => $value){
 					$query .= $key . '= :' . $key . ",";
 				}
-				$query = trim($query, ",");
+				$query         = trim($query,",");
 				$data['my_id'] = $_my_id;
 				
 				$query .= " where $this->primary_key = :my_id";
-				return $this->query($query, $data);
+				return $this->query($query,$data);
 			}
 			return false;
 			
@@ -104,7 +109,7 @@
 		{
 			$query = "delete from $this->table ";
 			$query .= " where $this->primary_key = :my_id limit 1";
-			return $this->query($query, $data);
+			return $this->query($query,$data);
 		}
 		
 		

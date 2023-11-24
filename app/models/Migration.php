@@ -68,11 +68,12 @@
 		public function insert(string $table)
 		{
 			if (!empty($this->data) && is_array ($this->data)) {
-				foreach ($data as $row) {
+				
+				foreach ($this->data as $row) {
 					
-					$key = array_keys ($row);
-					$columns_string = implode (",", $key);
-					$values_string = ':' . implode(",:", $key);
+					$keys = array_keys($row);
+					$columns_string = implode (",", $keys);
+					$values_string = ':' . implode(",:", $keys);
 					
 				    $query = "INSERT INTO $table ($columns_string) VALUES ($values_string)";
 						$this->query ($query, $row);
@@ -113,7 +114,7 @@
 			$this->fullTextKeys[] = $key;
 		}
 		
-		public function addData(string $data)
+		public function addData(array $data)
 		{
 			
 			$this->data[] = $data;
