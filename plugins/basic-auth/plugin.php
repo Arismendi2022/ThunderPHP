@@ -13,6 +13,7 @@
 		'signup_page' => 'signup',
 		'forgot_page' => 'forgot',
 		'logout_page' => 'logout',
+		'admin_plugin_route' => 'admin',
 		'tables' => [
 		],
 	
@@ -22,7 +23,7 @@
 		
 		$vars = get_value();
 		$req  = new \Core\Request;
-		$ses = new \Core\Session;
+		$ses  = new \Core\Session;
 		
 		
 		if($req->posted() && page() == $vars['login_page'])
@@ -40,6 +41,7 @@
 	add_filter('header-footer_before_menu_links',function($links){
 		
 		$ses = new \Core\Session;
+		$vars = get_value();
 		
 		$link             = (object)[];
 		$link->id         = 0;
@@ -55,6 +57,14 @@
 		$link->slug       = 'signup';
 		$link->icon       = '';
 		$link->permission = 'not_logged_in';
+		$links[] = $link;
+		
+		$link        = (object)[];
+		$link->id    = 0;
+		$link->title = 'Admin';
+		$link->slug  = $vars['admin_plugin_route'];
+		$link->icon  = '';
+		$link->permission  = 'logged_in';
 		$links[] = $link;
 		
 		$link               = (object)[];

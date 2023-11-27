@@ -1,14 +1,14 @@
 {
-	"name":"Header footer",
-	"id":"header-footer",
+	"name":"Basic Admin",
+	"id":"basic-admin",
 	"author":"Arismendi",
 	"author website":"",
 	"thumbnail":"thumbnail.jpg",
 	"active":true,
-	"index":3,
+	"index":2,
 	"routes": {
-		"on":["all"],
-		"off":["admin"]
+		"on":["admin"],
+		"off":[]
 	},
 	"dependencies": {
 
