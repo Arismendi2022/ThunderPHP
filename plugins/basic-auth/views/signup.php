@@ -30,8 +30,8 @@
 		
 		<select class="form-select p-3" name="gender" style="border-radius: 30px;">
 			<option value="">--Seleccione Genero--</option>
-			<option <?= old_select('gender','Masculino') ?> value="Masculino">Masculino</option>
-			<option <?= old_select('gender','Femenino') ?> value="Femenino">Femenino</option>
+			<option <?= old_select('gender','masculino') ?> value="masculino">Masculino</option>
+			<option <?= old_select('gender','femenino') ?> value="femenino">Femenino</option>
 		</select>
 			<?php if(!empty($errors['gender'])): ?>
 				<small class="text-danger px-2"><?= $errors['gender'] ?></small>

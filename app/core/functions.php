@@ -413,8 +413,10 @@
 		return false;
 	}
 	
-	function get_image(string $path = '', string $type = 'post')
+	function get_image(?string $path = '', string $type = 'post')
 	{
+		$path = $path ?? '';
+		
 		if(file_exists($path))
 			return ROOT . '/' . $path;
 		
@@ -436,25 +438,46 @@
 		return htmlspecialchars($str);
 	}
 	
-	function get_date(string $date):string
+	function get_date(?string $date):string
 	{
+		$date = $date ?? '';
 		return date("jS M, Y", strtotime($date));
 	}
 	
-	function message(string $msg = '', bool $erase = false):?string
+	function message_success(string $msg = '',bool $erase = false):?string
 	{
 		$ses = new \Core\Session;
 		
 		if(!empty($msg)){
-			$ses->set('message', $msg);
-			
-		} else if(!empty($ses->get('message'))){
-			$msg = $ses->get('message');
-			
-			if($erase) $ses->pop('message');
-			
-			return $msg;
-		}
+			$ses->set('message_success',$msg);
+		}else
+			if(!empty($ses->get('message_success'))){
+				$msg = $ses->get('message_success');
+				
+				if($erase)
+					$ses->pop('message_success');
+				
+				return $msg;
+			}
+		
+		return '';
+	}
+	
+	function message_fail(string $msg = '',bool $erase = false):?string
+	{
+		$ses = new \Core\Session;
+		
+		if(!empty($msg)){
+			$ses->set('message_fail',$msg);
+		}else
+			if(!empty($ses->get('message_fail'))){
+				$msg = $ses->get('message_fail');
+				
+				if($erase)
+					$ses->pop('message_fail');
+				
+				return $msg;
+			}
 		
 		return '';
 	}

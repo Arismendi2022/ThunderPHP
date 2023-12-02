@@ -10,7 +10,7 @@
 		
 		$user->insert($postdata);
 		
-		message("Registro completado! Por favor inicie sesión para continuar");
+		message_success("Registro completado! Por favor inicie sesión para continuar");
 		redirect($vars['login_page']);
 	}else{
 		if(!$csrf)

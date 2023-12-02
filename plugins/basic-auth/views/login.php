@@ -15,9 +15,15 @@
 		<h3 class="text-center mt-4">Iniciar Sesión</h3>
 		<div class="text-muted text-center mb-4"><i>Por favor inicie sesión para continuar</i></div>
 		
-		<?php if(message()): ?>
+		<?php if(message_success()): ?>
+			<div class="alert alert-success text-center">
+				<?= esc(message_success('',true)) ?>
+			</div>
+		<?php endif ?>
+		
+		<?php if(message_fail()): ?>
 			<div class="alert alert-danger text-center">
-				<?= esc(message('',true)) ?>
+				<?= esc(message_fail('',true)) ?>
 			</div>
 		<?php endif ?>
 		

@@ -11,13 +11,13 @@
 	 */
 	class Model extends Database
 	{
-		public $order = 'desc';
-		public $order_column = 'id';
-		public $primary_key = 'id';
+		public $order         = 'desc';
+		public $order_column  = 'id';
+		public $primary_key   = 'id';
 		
-		public $limit = 10;
-		public $offset = 0;
-		public $errors = [];
+		public $limit   = 10;
+		public $offset  = 0;
+		public $errors  = [];
 		
 		public function where(array $where_array = [],array $where_not_array = [],string $data_type = 'object'):array|bool
 		{
@@ -54,8 +54,8 @@
 		
 		public function getAll(string $data_type = 'object'):array|bool
 		{
-			$query = "select * from $this->table order by $this->order_column $this->order limit $limit offset $offset";
-			return $this->where($query,[],$data_type);
+			$query = "select * from $this->table order by $this->order_column $this->order limit $this->limit offset $this->offset";
+			return $this->query($query,[],$data_type);
 			
 		}
 		
@@ -79,7 +79,7 @@
 			
 		}
 		
-		public function update(string|int $my_id,array $data)
+		public function update(string|int $_my_id,array $data)
 		{
 			if(!empty($this->allowedUpdateColumns) || !empty($this->allowedColumns)){
 				$this->allowedUpdateColumns = empty($this->allowedUpdateColumns) ? $this->allowedColumns : $this->allowedUpdateColumns;

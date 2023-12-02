@@ -1,0 +1,17 @@
+{
+	"name":"Users Manager",
+	"id":"users-manager",
+	"author":"Arismendi",
+	"author website":"",
+	"thumbnail":"thumbnail.jpg",
+	"active":true,
+	"index":3,
+	"routes": {
+		"on":["admin"],
+		"off":[]
+	},
+	"dependencies": {
+
+	}
+
+}

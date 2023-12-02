@@ -16,7 +16,7 @@
 			}
 		}
 		
-		message('Correo o contraseña equivocada');
+		message_fail('Correo o contraseña equivocada');
 	}else {
-		message('El formulario expiró! Por favor refresca');
+		message_fail('El formulario expiró! Por favor refresca');
 	}
