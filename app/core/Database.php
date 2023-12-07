@@ -115,7 +115,7 @@
 				$query = "SELECT TABLE_NAME AS tables FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . $this->table_exists_db . "'";
 				
 				$res    = $this->query($query);
-				$result = $APP['tables'] = $res['result'];
+				$result = $APP['tables'] = $res;
 			} else{
 				$result = $APP['tables'];
 			}

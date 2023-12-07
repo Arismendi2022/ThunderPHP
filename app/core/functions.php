@@ -317,7 +317,10 @@
 		if(empty($APP['user_permissions']))
 			$APP['user_permissions'] = [];
 		
-		$APP['user_permissions'] = do_filter('before_check_permissions', $APP['user_permissions']);
+		$APP['user_permissions'] = do_filter('user_permissions', $APP['user_permissions']);
+		
+		if(in_array('all', $APP['user_permissions']))
+			return true;
 		
 		if(in_array($permission, $APP['user_permissions']))
 			return true;

@@ -12,16 +12,19 @@
 		'admin_route'  => 'admin',
 		'plugin_route' => 'usuarios',
 		'tables'       => [
-			'users_table'     => 'users',
-			'roles_table'     => 'users_roles',
-			'roles_map_table' => 'user_roles_map',
+			'users_table'       => 'users',
+			'roles_table'       => 'users_roles',
+			'permissions_table' => 'role_permissions',
+			'roles_map_table'   => 'user_roles_map',
 		],
 	]);
 	
 	/** set user permissions for this plugin **/
 	add_filter('permissions',function($permissions){
 		
+		$permissions[] = 'all';
 		$permissions[] = 'view_users';
+		$permissions[] = 'view_user_details';
 		$permissions[] = 'add_user';
 		$permissions[] = 'edit_user';
 		$permissions[] = 'delete_user';
@@ -29,17 +32,44 @@
 		return $permissions;
 	});
 	
+	/** set user permissions for current user **/
+	add_filter('user_permissions',function($permissions){
+		
+		$ses - new \Core\Session;
+		
+		if($ses->is_logged_in()){
+			
+			$vars = get_value();
+			$db   = new \Core\Database;
+			
+			$query = "select * from " . $vars['tables']['roles_table'];
+			$roles = $db->query($query);
+			
+			if(is_array($roles)){
+			
+			}else{
+				
+				$permissions[] = 'all';
+			}
+		}
+		
+		return $permissions;
+	});
+	
 	/** add to admin links **/
 	add_filter('basic-admin_before_admin_links',function($links){
 		
-		$vars = get_value();
-		
-		$obj         = (object)[];
-		$obj->title  = 'Usuarios';
-		$obj->link   = ROOT . '/' . $vars['admin_route'] . '/' . $vars['plugin_route'];
-		$obj->icon   = 'fa-solid fa-people-group';
-		$obj->parent = 0;
-		$links[]     = $obj;
+		if(user_can('view_users')){
+			
+			$vars = get_value();
+			
+			$obj         = (object)[];
+			$obj->title  = 'Usuarios';
+			$obj->link   = ROOT . '/' . $vars['admin_route'] . '/' . $vars['plugin_route'];
+			$obj->icon   = 'fa-solid fa-people-group';
+			$obj->parent = 0;
+			$links[]     = $obj;
+		}
 		
 		return $links;
 	});

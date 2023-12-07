@@ -77,7 +77,7 @@
 		
 		$link               = (object)[];
 		$link->id           = 0;
-		$link->title        = 'Hi, ' . $ses->user('first_name');
+		$link->title        = 'Hola, ' . $ses->user('first_name');
 		$link->slug         = 'profile/'. $ses->user('id');
 		$link->icon         = '';
 		$link->permission   = 'logged_in';

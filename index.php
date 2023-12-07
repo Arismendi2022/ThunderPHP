@@ -26,7 +26,7 @@
 		
 		die("<center><h1 style='font-family: Tahoma'>¡No se encontraron plugins! coloque al menos un plugin en la carpeta de plugins</h1></center>");
 	
-	$APP['permissions'] = do_filter('user_permissions', $APP['permissions']);
+	$APP['permissions'] = do_filter('permissions', $APP['permissions']);
 	
 	/** load the app */
 	$app = new \Core\App();

@@ -62,17 +62,19 @@
 		public function insert(array $data)
 		{
 			if(!empty($this->allowedColumns)){
+				
 				foreach($data as $key => $value){
 					if(!in_array($key,$this->allowedColumns)){
+						
 						unset($data[$key]);
 					}
 				}
 			}
 			
 			if(!empty($data)){
-				$key = array_keys($data);
+				$keys = array_keys($data);
 				
-				$query = "insert into $this->table(" . implode(",",$key) . ") values(:" . implode(",:",$key) . ")";
+				$query = "insert into $this->table(" . implode(",",$keys) . ") values(:" . implode(",:",$keys) . ")";
 				return $this->query($query,$data);
 			}
 			return false;
@@ -82,6 +84,7 @@
 		public function update(string|int $_my_id,array $data)
 		{
 			if(!empty($this->allowedUpdateColumns) || !empty($this->allowedColumns)){
+				
 				$this->allowedUpdateColumns = empty($this->allowedUpdateColumns) ? $this->allowedColumns : $this->allowedUpdateColumns;
 				foreach($data as $key => $value){
 					if(!in_array($key,$this->allowedUpdateColumns)){
@@ -91,7 +94,7 @@
 			}
 			
 			if(!empty($data)){
-				$query = "update $this->table ";
+				$query = "update $this->table set ";
 				foreach($data as $key => $value){
 					$query .= $key . '= :' . $key . ",";
 				}
@@ -105,10 +108,12 @@
 			
 		}
 		
-		public function delete(string|int $id)
+		public function delete(string|int $_my_id)
 		{
 			$query = "delete from $this->table ";
-			$query .= " where $this->primary_key = :my_id limit 1";
+			$query .= " where $this->primary_key = :_my_id limit 1";
+			
+			$data['_my_id'] = $_my_id;
 			return $this->query($query,$data);
 		}
 		
