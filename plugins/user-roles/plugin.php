@@ -1,27 +1,24 @@
 <?php
 	
 	/**
-	 * Plugin name: Users Manager
+	 * Plugin name: User Roles
 	 * Autor: Arismendi
-	 * Description: Una forma para que el administrador administre usuarios
+	 * Description: Una forma para que el administrador administre roles de usuario
 	 *
 	 *
 	 **/
 	
 	set_value([
+		
 		'admin_route'  => 'admin',
-		'plugin_route' => 'usuarios',
+		'plugin_route' => 'roles-usuario',
 		'tables'       => [
 			'users_table'       => 'users',
+			'roles_table'       => 'user_roles',
+			'permissions_table' => 'role_permissions',
+			'roles_map_table'   => 'user_roles_map',
 		],
-
-		'optional_tables'		=>[
-		'roles_table' 		=> 'user_roles',
-		'permissions_table' => 'role_permissions',
-		'roles_map_table' 	=> 'user_roles_map',
-	],
-
-
+	
 	]);
 	
 	/** check if all tables exist **/
@@ -29,43 +26,17 @@
 	$tables = get_value()['tables'];
 	
 	if(!$db->table_exists($tables)){
-		dd("Faltan tablas de base de datos en " .plugin_id() ." plugin: ". implode(",", $db->missing_tables));
+		dd("Faltan tablas de base de datos en " . plugin_id() . " plugin: " . implode(",",$db->missing_tables));
 		die;
 	}
 	
 	/** set user permissions for this plugin **/
 	add_filter('permissions',function($permissions){
 		
-		$permissions[] = 'all';
-		$permissions[] = 'view_users';
-		$permissions[] = 'view_user_details';
-		$permissions[] = 'add_user';
-		$permissions[] = 'edit_user';
-		$permissions[] = 'delete_user';
-		
-		return $permissions;
-	});
-	
-	/** set user permissions for current user **/
-	add_filter('user_permissions',function($permissions){
-		
-		$ses = new \Core\Session;
-		
-		if($ses->is_logged_in()){
-			
-			$vars = get_value();
-			$db   = new \Core\Database;
-			
-			$query = "select * from " . $vars['optional_tables']['roles_table'];
-			$roles = $db->query($query);
-			
-			if(is_array($roles)){
-			
-			}else{
-				
-				$permissions[] = 'all';
-			}
-		}
+		$permissions[] = 'view_roles';
+		$permissions[] = 'add_roles';
+		$permissions[] = 'edit_roles';
+		$permissions[] = 'delete_roles';
 		
 		return $permissions;
 	});
@@ -78,15 +49,16 @@
 			$vars = get_value();
 			
 			$obj         = (object)[];
-			$obj->title  = 'Usuarios';
+			$obj->title  = 'Roles Usuario';
 			$obj->link   = ROOT . '/' . $vars['admin_route'] . '/' . $vars['plugin_route'];
-			$obj->icon   = 'fa-solid fa-people-group';
+			$obj->icon   = 'fa-solid fa-unlock';
 			$obj->parent = 0;
 			$links[]     = $obj;
 		}
 		
 		return $links;
 	});
+	
 	
 	/** run this after a form submit **/
 	add_action('controller',function(){
@@ -99,11 +71,11 @@
 		
 		if(URL(1) == $vars['plugin_route'] && $req->posted()){
 			$ses  = new \Core\Session;
-			$user = new \UsersManager\User;
+			$user_role = new \UserRole\User_role;
 			
 			$id = URL(3) ?? null;
 			if($id)
-				$row = $user->first(['id' => $id]);
+				$row = $user_role->first(['id' => $id]);
 			
 			if(URL(2) == 'add'){
 				require plugin_path('controllers/add-controller.php');
@@ -121,7 +93,6 @@
 		
 	});
 	
-	
 	/** displays the view file **/
 	add_action('basic-admin_main_content',function(){
 		
@@ -133,13 +104,13 @@
 		
 		$errors = $vars['errors'] ?? [];
 		
-		$user = new \UsersManager\User;
+		$user_role = new \UserRole\User_role;
 		
 		if(URL(1) == $vars['plugin_route']){
 			
 			$id = URL(3) ?? null;
 			if($id)
-				$row = $user->first(['id' => $id]);
+				$row = $user_role->first(['id' => $id]);
 			
 			if(URL(2) == 'add'){
 				
@@ -157,8 +128,8 @@
 				require plugin_path('views/view.php');
 			}else{
 				
-				$user->limit = 30;
-				$rows        = $user->getAll();
+				$user_role->limit = 30;
+				$rows        = $user_role->getAll();
 				require plugin_path('views/list.php');
 			}
 			
@@ -177,5 +148,5 @@
 		
 		return $data;
 	});
-
-
+	
+	

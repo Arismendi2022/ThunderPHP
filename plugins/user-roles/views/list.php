@@ -4,13 +4,16 @@
 		<table class="table table-striped table-bordered">
 			<tr>
 				<th>#</th>
-				<th>Nombres</th>
-				<th>Apellidos</th>
-				<th>Imagen</th>
-				<th>Genero</th>
-				<th>Roles</th>
-				<th>Fecha Creado</th>
-				<th>Fecha Actualizado</th>
+				<th>Rol</th>
+				<th>Activo</th>
+				<th>
+					<div class="d-flex justify-content-between">
+						Permisos
+						<button class="btn btn-bd-primary btn-sm">
+							<i class="fa-solid fa-save"></i> Guardar Permisos
+						</button>
+					</div>
+				</th>
 				<th>
 					<?php if(user_can('add_user')): ?>
 						<a href="<?= ROOT ?>/<?= $admin_route ?>/<?= $plugin_route ?>/add">
@@ -25,34 +28,30 @@
 					<tr>
 						<td><?= $row->id ?></td>
 						<td>
-							<a href="<?= ROOT ?>/<?= $admin_route ?>/<?= $plugin_route ?>/view/<?= $row->id ?>">
-								<?= esc($row->first_name) ?>
-							</a>
+							<?= esc($row->role) ?>
 						</td>
 						<td>
-							<a href="<?= ROOT ?>/<?= $admin_route ?>/<?= $plugin_route ?>/view/<?= $row->id ?>">
-								<?= esc($row->last_name) ?>
-							</a>
+							<?= esc($row->disabled ? 'No' : "Si") ?>
+						</td>
+						<td style="max-width: 200px">
+							<div class="row g-2">
+								<?php $perms = array_unique(APP('permissions')); ?>
+								
+								<?php if(!empty($perms)): $num = 0 ?>
+									<?php foreach($perms as $perm): $num++ ?>
+										<div class="form-check col-md-6">
+											<input name="checkbox_<?= $row->id ?>_<?= $num ?>" class="form-check-input" type="checkbox" value="<?= $perm ?>" id="check<?= $num ?>">
+											<label class="form-check-label" for="check<?= $num ?>" style="cursor: pointer;">
+												<?= esc(str_replace("_"," ",$perm)) ?>
+											</label>
+										</div>
+									<?php endforeach ?>
+								<?php endif ?>
+							</div>
 						</td>
 						<td>
-							<img src="<?= get_image($row->image) ?>" class="img-thumbnail" style="width:70px;height:70px;object-fit: cover;"/>
-						</td>
-						<td><?= esc(ucfirst($row->gender)) ?></td>
-						<td>
-						
-						</td>
-						<td><?= get_date($row->date_created) ?></td>
-						<td><?= get_date($row->date_updated) ?></td>
-						<td>
-							<?php if(user_can('view_user_details')): ?>
-								<a href="<?= ROOT ?>/<?= $admin_route ?>/<?= $plugin_route ?>/view/<?= $row->id ?>">
-									<button class="btn btn-primary btn-sm">
-										<i class="fa-solid fa-eye"></i> Ver
-									</button>
-								</a>
-							<?php endif ?>
 							
-							<?php if(user_can('edit_user')): ?>
+							<?php if(user_can('edit_role')): ?>
 								<a href="<?= ROOT ?>/<?= $admin_route ?>/<?= $plugin_route ?>/edit/<?= $row->id ?>">
 									<button class="btn btn-warning btn-sm">
 										<i class="fa-solid fa-pen-to-square"></i> Editar
@@ -60,7 +59,7 @@
 								</a>
 							<?php endif ?>
 							
-							<?php if(user_can('delete_user')): ?>
+							<?php if(user_can('delete_role')): ?>
 								<a href="<?= ROOT ?>/<?= $admin_route ?>/<?= $plugin_route ?>/delete/<?= $row->id ?>">
 									<button class="btn btn-danger btn-sm">
 										<i class="fa-solid fa-trash"></i> eliminar
@@ -73,6 +72,7 @@
 			<?php endif ?>
 		</table>
 	</div>
+
 <?php else: ?>
 	<div class="alert alert-danger text-center">
 		Acceso denegado. No tienes permiso para esta acción.

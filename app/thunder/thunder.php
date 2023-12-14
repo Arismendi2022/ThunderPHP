@@ -20,34 +20,34 @@
 				$original_folder = $folder;
 				$folder          = 'plugins/' . $folder;
 				
-				if(file_exists($folder)) $this->message("Esa carpeta de complementos ya existe", true);
+				if(file_exists($folder)) $this->message("Esa carpeta de complementos ya existe",true);
 				
 				/*main plugin folder*/
-				mkdir($folder, 0777, true);
+				mkdir($folder,0777,true);
 				
 				$css_folder = $folder . '/assets/css/';
-				mkdir($css_folder, 0777, true);
+				mkdir($css_folder,0777,true);
 				
 				$js_folder = $folder . '/assets/js/';
-				mkdir($js_folder, 0777, true);
+				mkdir($js_folder,0777,true);
 				
 				$fonts_folder = $folder . '/assets/fonts/';
-				mkdir($fonts_folder, 0777, true);
+				mkdir($fonts_folder,0777,true);
 				
 				$images_folder = $folder . '/assets/images/';
-				mkdir($images_folder, 0777, true);
+				mkdir($images_folder,0777,true);
 				
 				$controller_folder = $folder . '/controllers/';
-				mkdir($controller_folder, 0777, true);
+				mkdir($controller_folder,0777,true);
 				
 				$view_folder = $folder . '/views/';
-				mkdir($view_folder, 0777, true);
+				mkdir($view_folder,0777,true);
 				
 				$migration_folder = $folder . '/migrations/';
-				mkdir($migration_folder, 0777, true);
+				mkdir($migration_folder,0777,true);
 				
 				$models_folder = $folder . '/models/';
-				mkdir($models_folder, 0777, true);
+				mkdir($models_folder,0777,true);
 				
 				/*copy files*/
 				
@@ -56,8 +56,8 @@
 				$plugin_file_source = 'app/thunder/samples/plugin-sample.php';
 				
 				if(file_exists($plugin_file_source)){
-					copy($plugin_file_source, $plugin_file);
-				} else{
+					copy($plugin_file_source,$plugin_file);
+				}else{
 					$this->message("archivo de muestra del plugin no encontrado en: " . $plugin_file_source);
 				}
 				
@@ -66,8 +66,8 @@
 				$controller_file_source = 'app/thunder/samples/controller-sample.php';
 				
 				if(file_exists($controller_file_source)){
-					copy($controller_file_source, $controller_file);
-				} else{
+					copy($controller_file_source,$controller_file);
+				}else{
 					$this->message("archivo de muestra del controlador no encontrado en: " . $controller_file_source);
 				}
 				
@@ -76,8 +76,8 @@
 				$view_file_source = 'app/thunder/samples/view-sample.php';
 				
 				if(file_exists($view_file_source)){
-					copy($view_file_source, $view_file);
-				} else{
+					copy($view_file_source,$view_file);
+				}else{
 					$this->message("archivo View de muestra no encontrado en: " . $view_file_source);
 				}
 				
@@ -86,8 +86,8 @@
 				$js_file_source = 'app/thunder/samples/js-sample.js';
 				
 				if(file_exists($js_file_source)){
-					copy($js_file_source, $js_file);
-				} else{
+					copy($js_file_source,$js_file);
+				}else{
 					$this->message("js archivo de muestra no encontrado en: " . $js_file_source);
 				}
 				
@@ -96,8 +96,8 @@
 				$css_file_source = 'app/thunder/samples/css-sample.css';
 				
 				if(file_exists($css_file_source)){
-					copy($css_file_source, $css_file);
-				} else{
+					copy($css_file_source,$css_file);
+				}else{
 					$this->message("archivo de muestra css no encontrado en: " . $css_file_source);
 				}
 				
@@ -106,78 +106,78 @@
 				$config_file_source = 'app/thunder/samples/config-sample.json';
 				
 				if(file_exists($config_file_source)){
-					copy($config_file_source, $config_file);
-				} else{
+					copy($config_file_source,$config_file);
+				}else{
 					$this->message("archivo de muestra de config no encontrado en: " . $config_file_source);
 				}
 				
 				$this->message("Creación del plugin completada! Carpeta de plugins: " . $folder);
 				
-			} else if($action == 'make:migration'){
+			}else if($action == 'make:migration'){
 				$original_folder = $folder;
 				$folder          = 'plugins/' . $folder . '/';
 				
-				if(!file_exists($folder)) $this->message("Carpeta de plugin no encontrada", true);
+				if(!file_exists($folder)) $this->message("Carpeta de plugin no encontrada",true);
 				
 				$migration_folder = $folder . "migrations/";
-				if(!file_exists($migration_folder)) mkdir($migration_folder, 0777, true);
+				if(!file_exists($migration_folder)) mkdir($migration_folder,0777,true);
 				
 				$file_sample = 'app/thunder/samples/migration-sample.php';
-				if(!file_exists($file_sample)) $this->message("Archivo de migración de muestra no encontrado en: " . $file_sample, true);
+				if(!file_exists($file_sample)) $this->message("Archivo de migración de muestra no encontrado en: " . $file_sample,true);
 				
-				if(empty($class_name)) $this->message("Proporcione un nombre de class válido para su archivo de migración", true);
+				if(empty($class_name)) $this->message("Proporcione un nombre de class válido para su archivo de migración",true);
 				
-				$class_name = preg_replace("/[^a-zA-Z_\-]/", "", $class_name);
-				$class_name = str_replace("-", "_", $class_name);
+				$class_name = preg_replace("/[^a-zA-Z_\-]/","",$class_name);
+				$class_name = str_replace("-","_",$class_name);
 				$class_name = ucfirst($class_name);
 				
 				$table_name = strtolower($class_name);
 				
 				$content = file_get_contents($file_sample);
-				$content = str_replace("{TABLE_NAME}", $table_name, $content);
-				$content = str_replace("{CLASS_NAME}", $class_name, $content);
+				$content = str_replace("{TABLE_NAME}",$table_name,$content);
+				$content = str_replace("{CLASS_NAME}",$class_name,$content);
 				
 				$filename = $migration_folder . date("Y-m-d_His_") . $table_name . '.php';
-				file_put_contents($filename, $content);
+				file_put_contents($filename,$content);
 				
-				$this->message("Archivo de migración creado. Nombre del archivo: " . $filename, true);
+				$this->message("Archivo de migración creado. Nombre del archivo: " . $filename,true);
 				
-			} else if($action == 'make:model'){
+			}else if($action == 'make:model'){
 				
 				$original_folder = $folder;
 				$folder          = 'plugins/' . $folder . '/';
 				
-				if(!file_exists($folder)) $this->message("Carpeta del plugin no encontrada", true);
+				if(!file_exists($folder)) $this->message("Carpeta del plugin no encontrada",true);
 				
 				$model_folder = $folder . "models/";
-				if(!file_exists($model_folder)) mkdir($model_folder, 0777, true);
+				if(!file_exists($model_folder)) mkdir($model_folder,0777,true);
 				
 				$file_sample = 'app/thunder/samples/model-sample.php';
-				if(!file_exists($file_sample)) $this->message("Archivo de modelo de muestra no encontrado en: " . $file_sample, true);
+				if(!file_exists($file_sample)) $this->message("Archivo de modelo de muestra no encontrado en: " . $file_sample,true);
 				
-				if(empty($class_name)) $this->message("Proporcione un nombre de class válido para su archivo de modelo", true);
+				if(empty($class_name)) $this->message("Proporcione un nombre de class válido para su archivo de modelo",true);
 				
-				$class_name = preg_replace("/[^a-zA-Z_\-]/", "", $class_name);
-				$class_name = str_replace("-", "_", $class_name);
+				$class_name = preg_replace("/[^a-zA-Z_\-]/","",$class_name);
+				$class_name = str_replace("-","_",$class_name);
 				$class_name = ucfirst($class_name);
 				
 				$table_name = strtolower($class_name);
 				
 				$content = file_get_contents($file_sample);
-				$content = str_replace("{TABLE_NAME}", $table_name, $content);
-				$content = str_replace("{CLASS_NAME}", $class_name, $content);
+				$content = str_replace("{TABLE_NAME}",$table_name,$content);
+				$content = str_replace("{CLASS_NAME}",$class_name,$content);
 				
-				$namespace = str_replace("-", " ", $original_folder);
+				$namespace = str_replace("-"," ",$original_folder);
 				$namespace = ucwords($namespace);
-				$namespace = str_replace(" ", "", $namespace);
-			  $content = str_replace("{NAMESPACE}", $namespace, $content);
+				$namespace = str_replace(" ","",$namespace);
+				$content   = str_replace("{NAMESPACE}",$namespace,$content);
 				
 				$filename = $model_folder . $class_name . '.php';
-				file_put_contents($filename, $content);
+				file_put_contents($filename,$content);
 				
-				$this->message("Archivo de modelo creado. Nombre del archivo: " . $filename, true);
+				$this->message("Archivo de modelo creado. Nombre del archivo: " . $filename,true);
 				
-			} else{
+			}else{
 				$this->message("Comando desconocido " . $action);
 			}
 			
@@ -193,7 +193,7 @@
 				
 				$folder = 'plugins/' . $folder . '/migrations/';
 				
-				if(!is_dir($folder)) $this->message("No se encontraron archivos de migración en esta ubicación", true);
+				if(!is_dir($folder)) $this->message("No se encontraron archivos de migración en esta ubicación",true);
 				
 				if(!empty($file_name)){
 					
@@ -205,20 +205,21 @@
 					require_once $file;
 					
 					$class_name = basename($file);
-					preg_match("/[a-zA-Z]+\.php$/", $class_name, $match);
-					$class_name = ucfirst(str_replace(".php", "", $match[0]));
+					preg_match("/[a-zA-Z_]+\.php$/",$class_name,$match);
+					$class_name = ucfirst(str_replace(".php","",$match[0]));
+					$class_name = trim($class_name,'_');
 					
 					$myclass = new ("\Migration\\$class_name");
 					
 					if($action == 'migrate'){
 						$myclass->up();
-					} else{
+					}else{
 						$myclass->down();
 					}
 					
 					$this->message("Migración completa!");
 					$this->message("Archivo: " . $file_name);
-				} else{
+				}else{
 					/** get all files from folder **/
 					$files = glob($folder . '*.php');
 					
@@ -231,33 +232,34 @@
 							require_once $file;
 							
 							$class_name = basename($file);
-							preg_match("/[a-zA-Z]+\.php$/", $class_name, $match);
-							$class_name = ucfirst(str_replace(".php", "", $match[0]));
+							preg_match("/[a-zA-Z_]+\.php$/",$class_name,$match);
+							$class_name = ucfirst(str_replace(".php","",$match[0]));
+							$class_name = trim($class_name,'_');
 							
 							$myclass = new ("\Migration\\$class_name");
 							
 							if($action == 'migrate'){
 								$myclass->up();
-							} else{
+							}else{
 								$myclass->down();
 							}
 						}
 						
 						$this->message("Migración completa!");
 						
-					} else{
+					}else{
 						$this->message("No se encontraron archivos de migración en la carpeta especificada");
 					}
 				}
-			} else if($action == 'migrate:refresh'){
+			}else if($action == 'migrate:refresh'){
 				
-				$this->migrate(['thunder', 'migrate:rollback', $folder, $file_name]);
-				$this->migrate(['thunder', 'migrate', $folder, $file_name]);
+				$this->migrate(['thunder','migrate:rollback',$folder,$file_name]);
+				$this->migrate(['thunder','migrate',$folder,$file_name]);
 				
 			}
 		}
 		
-		public function help(string | array $version) :void
+		public function help(string|array $version):void
 		{
 			$version = is_array($version) ? $version[0] : $version;
 			
@@ -279,7 +281,7 @@
 			
 		}
 		
-		private function message(string $message, bool $die = false) :void
+		private function message(string $message,bool $die = false):void
 		{
 			echo "\n\r" . ucfirst($message);
 			ob_flush();

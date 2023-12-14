@@ -10,15 +10,14 @@
 	/**
 	 * Database class
 	 */
-	
 	class Database
 	{
-		private static $query_id  = '';
-		public $affected_rows     = 0;
-		public $insert_id         = 0;
-		public $error             = '';
-		public $has_error         = false;
-		public $table_exists_db   = '';
+		private static $query_id = '';
+		public $affected_rows = 0;
+		public $insert_id = 0;
+		public $error = '';
+		public $has_error = false;
+		public $table_exists_db = '';
 		
 		private function connect()
 		{
@@ -28,14 +27,14 @@
 			$VARS['DB_HOST']     = DB_HOST;
 			$VARS['DB_DRIVER']   = DB_DRIVER;
 			
-			$VARS = do_filter('before_db_connect', $VARS);
+			$VARS                  = do_filter('before_db_connect',$VARS);
 			$this->table_exists_db = $VARS['DB_NAME'];
 			
 			$string = "$VARS[DB_DRIVER]:hostname=$VARS[DB_HOST];dbname=$VARS[DB_NAME]";
 			
 			try{
-				$con = new PDO($string, $VARS['DB_USER'], $VARS['DB_PASSWORD']);
-				$con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$con = new PDO($string,$VARS['DB_USER'],$VARS['DB_PASSWORD']);
+				$con->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 				
 			} catch(PDOException $e){
 				die("No se pudo conectar a la base de datos con error " . $e->getMessage());
@@ -44,9 +43,9 @@
 			return $con;
 		}
 		
-		public function get_row(string $query, array $data = [], string $data_type = 'object')
+		public function get_row(string $query,array $data = [],string $data_type = 'object')
 		{
-			$result = $this->query($query, $data, $data_type);
+			$result = $this->query($query,$data,$data_type);
 			if(is_array($result) && count($result) > 0){
 				return $result[0];
 			}
@@ -54,10 +53,10 @@
 			
 		}
 		
-		public function query(string $query, array $data = [], string $data_type = 'object')
+		public function query(string $query,array $data = [],string $data_type = 'object')
 		{
-			$query = do_filter('before_query_query', $query);
-			$data  = do_filter('before_query_data', $data);
+			$query = do_filter('before_query_query',$query);
+			$data  = do_filter('before_query_data',$data);
 			
 			$this->error     = '';
 			$this->has_error = false;
@@ -74,7 +73,7 @@
 				if($result){
 					if($data_type == 'object'){
 						$rows = $stm->fetchAll(PDO::FETCH_OBJ);
-					} else{
+					}else{
 						$rows = $stm->fetchAll(PDO::FETCH_ASSOC);
 					}
 					
@@ -92,7 +91,7 @@
 			$arr['query_id'] = self::$query_id;
 			self::$query_id  = '';
 			
-			$result = do_filter('after_query', $arr);
+			$result = do_filter('after_query',$arr);
 			
 			if(is_array($result['result']) && count($result['result']) > 0){
 				return $result['result'];
@@ -116,26 +115,30 @@
 				
 				$res    = $this->query($query);
 				$result = $APP['tables'] = $res;
-			} else{
+			}else{
 				$result = $APP['tables'];
 			}
 			
 			if($result){
-				$all_tables = array_column($result, 'tables');
+				$all_tables = array_column($result,'tables');
 				
-				if(is_string($mytables)) $mytables = [$mytables];
+				if(is_string($mytables))
+					$mytables = [$mytables];
 				
 				$count = 0;
 				foreach($mytables as $key => $table){
-					if(in_array($table, $all_tables)) $count++;
+					if(in_array($table,$all_tables)){
+						$count++;
+					}else{
+						$this->missing_tables[] = $table;
+					}
 				}
 				
-				if($count == count($mytables)) return true;
+				if($count == count($mytables))
+					return true;
 			}
 			
 			return false;
 		}
-		
 	}
-	
 	

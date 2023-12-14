@@ -1,5 +1,6 @@
 {
 	"name":"Users Manager",
+	"version":"1.0.0",
 	"id":"users-manager",
 	"author":"Arismendi",
 	"author website":"",
@@ -11,6 +12,7 @@
 		"off":[]
 	},
 	"dependencies": {
+		"basic-auth": "1.0.0"
 
 	}
 

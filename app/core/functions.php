@@ -1,11 +1,11 @@
 <?php
 	
-	function set_value(string|array $key, mixed $value = '') :bool
+	function set_value(string|array $key,mixed $value = ''):bool
 	{
 		global $USER_DATA;
 		
 		$called_from = debug_backtrace();
-		$ikey        = array_search(__FUNCTION__, array_column($called_from, 'function'));
+		$ikey        = array_search(__FUNCTION__,array_column($called_from,'function'));
 		$path        = get_plugin_dir(debug_backtrace()[$ikey]['file']) . 'config.json';
 		
 		if(file_exists($path)){
@@ -14,11 +14,10 @@
 			
 			if(is_array($key)){
 				
-				foreach($key as $k => $value) {
+				foreach($key as $k => $value){
 					$USER_DATA[$plugin_id][$k] = $value;
 				}
-			}
-			else{
+			}else{
 				$USER_DATA[$plugin_id][$key] = $value;
 			}
 			return true;
@@ -26,22 +25,22 @@
 		return false;
 	}
 	
-	function plugin_id() :string
+	function plugin_id():string
 	{
 		$called_from = debug_backtrace();
-		$ikey        = array_search(__FUNCTION__, array_column($called_from, 'function'));
+		$ikey        = array_search(__FUNCTION__,array_column($called_from,'function'));
 		$path        = get_plugin_dir(debug_backtrace()[$ikey]['file']) . 'config.json';
 		
 		$json = json_decode(file_get_contents($path));
 		return $json->id ?? '';
 	}
 	
-	function get_value(string $key = '') :mixed
+	function get_value(string $key = ''):mixed
 	{
 		global $USER_DATA;
 		
 		$called_from = debug_backtrace();
-		$ikey        = array_search(__FUNCTION__, array_column($called_from, 'function'));
+		$ikey        = array_search(__FUNCTION__,array_column($called_from,'function'));
 		$path        = get_plugin_dir(debug_backtrace()[$ikey]['file']) . 'config.json';
 		
 		if(file_exists($path)){
@@ -62,8 +61,7 @@
 		
 		if(!empty($key)){
 			return !empty($APP[$key]) ? $APP[$key] : null;
-		}
-		else{
+		}else{
 			return $APP;
 		}
 		return null;
@@ -73,14 +71,14 @@
 	{
 		global $APP;
 		
-		$names = array_column($APP['plugins'], 'name');
+		$names = array_column($APP['plugins'],'name');
 		dd($names ?? []);
 	}
 	
 	/** splits the query string in the url **/
 	function split_url($url)
 	{
-		return explode("/", $url);
+		return explode("/",$url);
 	}
 	
 	function URL($key = '')
@@ -91,8 +89,7 @@
 			if(!empty($APP['URL'][$key])){
 				return $APP['URL'][$key];
 			}
-		}
-		else{
+		}else{
 			return $APP['URL'];
 		}
 		return '';
@@ -103,7 +100,7 @@
 		$plugins_folder = 'plugins/';
 		$res            = [];
 		$folders        = scandir($plugins_folder);
-		foreach($folders as $folder) {
+		foreach($folders as $folder){
 			if($folder != '.' && $folder != '..' && is_dir($plugins_folder . $folder))
 				$res[] = $folder;
 		}
@@ -114,10 +111,10 @@
 	function load_plugins($plugin_folders)
 	{
 		global $APP;
+		$loaded       = false;
+		$dependencies = [];
 		
-		$loaded = false;
-		
-		foreach($plugin_folders as $folder) {
+		foreach($plugin_folders as $folder){
 			
 			$file = 'plugins/' . $folder . '/config.json';
 			if(file_exists($file)){
@@ -128,10 +125,12 @@
 						$file = 'plugins/' . $folder . '/plugin.php';
 						if(file_exists($file) && valid_route($json)){
 							
-							$json->index      = $json->index ?? 1;
-							$json->index_file = $file;
-							$json->path       = 'plugins/' . $folder . '/';
-							$json->http_path  = ROOT . '/' . $json->path;
+							$json->index        = $json->index ?? 1;
+							$json->version      = $json->version ?? "1.0.0";
+							$json->dependencies = $json->dependencies ?? (object)[];
+							$json->index_file   = $file;
+							$json->path         = 'plugins/' . $folder . '/';
+							$json->http_path    = ROOT . '/' . $json->path;
 							
 							$APP['plugins'][] = $json;
 						}
@@ -142,7 +141,27 @@
 		
 		if(!empty($APP['plugins'])){
 			$APP['plugins'] = sort_plugins($APP['plugins']);
-			foreach($APP['plugins'] as $json) {
+			foreach($APP['plugins'] as $json){
+				/** check for plugin dependencies **/
+				if(!empty((array)$json->dependencies)){
+					foreach((array)$json->dependencies as $plugin_id => $version){
+						
+						if($plugin_data = plugin_exists($plugin_id)){
+							$required_version = (int)str_replace(".","",$version);
+							$existing_version = (int)str_replace(".","",$plugin_data->version);
+							if($existing_version < $required_version){
+								dd("Falta dependencia del plugin: " . $plugin_id . " version: " . $version . ", Solicitado por el plugin: " . $json->id);
+								die;
+							}
+						}else{
+							dd("Falta dependencia del plugin: " . $plugin_id . " version: " . $version . ", Solicitado por el plugin: " . $json->id);
+							die;
+						}
+					}
+					
+				}
+				
+				/** load plugin file **/
 				if(file_exists($json->index_file)){
 					require_once $json->index_file;
 					$loaded = true;
@@ -152,41 +171,55 @@
 		return $loaded;
 	}
 	
-	function sort_plugins(array $plugins) :array
+	function plugin_exists(string $plugin_id):bool|object
+	{
+		
+		global $APP;
+		$ids = array_column($APP['plugins'],'id');
+		$key = array_search($plugin_id,$ids);
+		if($key !== false){
+			
+			return $APP['plugins'][$key];
+		}
+		
+		return false;
+	}
+	
+	function sort_plugins(array $plugins):array
 	{
 		$to_sort = [];
 		$sorted  = [];
 		
-		foreach($plugins as $key => $obj) {
+		foreach($plugins as $key => $obj){
 			$to_sort[$key] = $obj->index;
 		}
 		
 		asort($to_sort);
 		
-		foreach($to_sort as $key => $value) {
+		foreach($to_sort as $key => $value){
 			$sorted[] = $plugins[$key];
 		}
 		
 		return $sorted;
 	}
 	
-	function valid_route(object $json) :bool
+	function valid_route(object $json):bool
 	{
 		if(!empty($json->routes->off) && is_array($json->routes->off)){
-			if(in_array(page(), $json->routes->off))
+			if(in_array(page(),$json->routes->off))
 				return false;
 		}
 		if(!empty($json->routes->on) && is_array($json->routes->on)){
 			if($json->routes->on[0] == 'all')
 				return true;
 			
-			if(in_array(page(), $json->routes->on))
+			if(in_array(page(),$json->routes->on))
 				return true;
 		}
 		return false;
 	}
 	
-	function add_action(string $hook, mixed $func, int $priority = 10) :bool
+	function add_action(string $hook,mixed $func,int $priority = 10):bool
 	{
 		global $ACTIONS;
 		
@@ -199,20 +232,20 @@
 		
 	}
 	
-	function do_action(string $hook, array $data = [])
+	function do_action(string $hook,array $data = [])
 	{
 		global $ACTIONS;
 		
 		if(!empty($ACTIONS[$hook])){
 			ksort($ACTIONS[$hook]);
 			
-			foreach($ACTIONS[$hook] as $key => $func) {
+			foreach($ACTIONS[$hook] as $key => $func){
 				$func($data);
 			}
 		}
 	}
 	
-	function add_filter(string $hook, mixed $func, int $priority = 10) :bool
+	function add_filter(string $hook,mixed $func,int $priority = 10):bool
 	{
 		global $FILTER;
 		
@@ -225,13 +258,13 @@
 		
 	}
 	
-	function do_filter(string $hook, mixed $data = '') :mixed
+	function do_filter(string $hook,mixed $data = ''):mixed
 	{
 		global $FILTER;
 		
 		if(!empty($FILTER[$hook])){
 			ksort($FILTER[$hook]);
-			foreach($FILTER[$hook] as $key => $func) {
+			foreach($FILTER[$hook] as $key => $func){
 				$data = $func($data);
 			}
 		}
@@ -261,35 +294,35 @@
 	function plugin_path(string $path = '')
 	{
 		$called_from = debug_backtrace();
-		$key         = array_search(__FUNCTION__, array_column($called_from, 'function'));
+		$key         = array_search(__FUNCTION__,array_column($called_from,'function'));
 		return get_plugin_dir(debug_backtrace()[$key]['file']) . $path;
 	}
 	
 	function plugin_http_path(string $path = '')
 	{
 		$called_from = debug_backtrace();
-		$key         = array_search(__FUNCTION__, array_column($called_from, 'function'));
+		$key         = array_search(__FUNCTION__,array_column($called_from,'function'));
 		return ROOT . DIRECTORY_SEPARATOR . get_plugin_dir(debug_backtrace()[$key]['file']) . $path;
 	}
 	
-	function get_plugin_dir(string $filepath) :string
+	function get_plugin_dir(string $filepath):string
 	{
 		
 		$path = "";
 		
 		$basename = basename($filepath);
-		$path     = str_replace($basename, "", $filepath);
+		$path     = str_replace($basename,"",$filepath);
 		
-		if(strstr($path, DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR)){
-			$parts = explode(DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR, $path);
-			$parts = explode(DIRECTORY_SEPARATOR, $parts[1]);
+		if(strstr($path,DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR)){
+			$parts = explode(DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR,$path);
+			$parts = explode(DIRECTORY_SEPARATOR,$parts[1]);
 			$path  = 'plugins' . DIRECTORY_SEPARATOR . $parts[0] . DIRECTORY_SEPARATOR;
 			
 		}
 		return $path;
 	}
 	
-	function user_can(?string $permission) :bool
+	function user_can(?string $permission):bool
 	{
 		if(empty($permission)) return true;
 		
@@ -317,18 +350,18 @@
 		if(empty($APP['user_permissions']))
 			$APP['user_permissions'] = [];
 		
-		$APP['user_permissions'] = do_filter('user_permissions', $APP['user_permissions']);
+		$APP['user_permissions'] = do_filter('user_permissions',$APP['user_permissions']);
 		
-		if(in_array('all', $APP['user_permissions']))
+		if(in_array('all',$APP['user_permissions']))
 			return true;
 		
-		if(in_array($permission, $APP['user_permissions']))
+		if(in_array($permission,$APP['user_permissions']))
 			return true;
 		
 		return false;
 	}
 	
-	function old_value(string $key, string $default = '', string $type = 'post') :string
+	function old_value(string $key,string $default = '',string $type = 'post'):string
 	{
 		$array = $_POST;
 		if($type == 'get')
@@ -340,7 +373,7 @@
 		return $default;
 	}
 	
-	function old_select(string $key, string $value, string $default = '', string $type = 'post') :string
+	function old_select(string $key,string $value,string $default = '',string $type = 'post'):string
 	{
 		$array = $_POST;
 		if($type == 'get')
@@ -349,8 +382,7 @@
 		if(!empty($array[$key])){
 			if($array[$key] == $value)
 				return ' selected ';
-		}
-		else{
+		}else{
 			if($default == $value)
 				return ' selected ';
 		}
@@ -358,7 +390,7 @@
 		return '';
 	}
 	
-	function old_checked(string $key, string $value, string $default = '', string $type = 'post') :string
+	function old_checked(string $key,string $value,string $default = '',string $type = 'post'):string
 	{
 		$array = $_POST;
 		if($type == 'get')
@@ -367,8 +399,7 @@
 		if(!empty($array[$key])){
 			if($array[$key] == $value)
 				return ' checked ';
-		}
-		else{
+		}else{
 			if($default == $value)
 				return ' checked ';
 		}
@@ -376,17 +407,17 @@
 		return '';
 	}
 	
-	function csrf(string $sesKey = 'csrf', int $hours = 1) :string
+	function csrf(string $sesKey = 'csrf',int $hours = 1):string
 	{
 		$key = '';
 		
 		$ses     = new \Core\Session;
-		$key     = hash('sha256', time() . rand(0, 99));
+		$key     = hash('sha256',time() . rand(0,99));
 		$expires = time() + ((60 * 60) * $hours);
 		
 		$ses->set(
-			$sesKey, [
-				'key' => $key,
+			$sesKey,[
+				'key'     => $key,
 				'expires' => $expires
 			]
 		);
@@ -394,7 +425,7 @@
 		return "<input type='hidden' value='$key' name='$sesKey' />";
 	}
 	
-	function csrf_verify(array $post, string $sesKey = 'csrf') :mixed
+	function csrf_verify(array $post,string $sesKey = 'csrf'):mixed
 	{
 		if(empty($post[$sesKey]))
 			return false;
@@ -416,7 +447,7 @@
 		return false;
 	}
 	
-	function get_image(?string $path = '', string $type = 'post')
+	function get_image(?string $path = '',string $type = 'post')
 	{
 		$path = $path ?? '';
 		
@@ -444,7 +475,7 @@
 	function get_date(?string $date):string
 	{
 		$date = $date ?? '';
-		return date("jS M, Y", strtotime($date));
+		return date("jS M, Y",strtotime($date));
 	}
 	
 	function message_success(string $msg = '',bool $erase = false):?string

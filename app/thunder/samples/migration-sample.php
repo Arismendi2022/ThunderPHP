@@ -36,11 +36,12 @@
 	/**
 	 * to seed data:
 	 * $this->addData([
-	 * 	'username'=>'john'
-	 * 	'email'=>'email@email.com'
-	 * 	'gender'=>'male'
+	 * 	'username'=>'john',
+	 * 	'email'=>'email@email.com',
+	 * 	'gender'=>'male',
 	 * ]);
-	 * $this->insert('{TABLE_NAME}')
+	 *
+	 * $this->insert('{TABLE_NAME}');
 	 */
 	
 	}

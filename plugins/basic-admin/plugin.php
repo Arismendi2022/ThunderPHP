@@ -26,7 +26,7 @@
 		
 		$vars = get_value();
 		
-		if(false && page() == $vars['plugin_route'] && !user_can('view_admin_page')){
+		if(page() == $vars['plugin_route'] && !user_can('view_admin_page')){
 			
 			message("Acceso a la página de administración denegado! por favor intente con un inicio de sesión diferente");
 			redirect('login');
