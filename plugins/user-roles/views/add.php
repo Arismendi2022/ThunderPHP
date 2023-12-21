@@ -1,4 +1,4 @@
-<?php if(user_can('add_user')): ?>
+<?php if(user_can('add_role')): ?>
 	<form method="post" enctype="multipart/form-data">
 		
 		<div class="row g-3 col-md-6 mx-auto shadow p-4 rounded">

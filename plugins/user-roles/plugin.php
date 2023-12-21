@@ -34,9 +34,10 @@
 	add_filter('permissions',function($permissions){
 		
 		$permissions[] = 'view_roles';
-		$permissions[] = 'add_roles';
-		$permissions[] = 'edit_roles';
-		$permissions[] = 'delete_roles';
+		$permissions[] = 'add_role';
+		$permissions[] = 'edit_role';
+		$permissions[] = 'edit_permissions';
+		$permissions[] = 'delete_role';
 		
 		return $permissions;
 	});
@@ -44,7 +45,7 @@
 	/** add to admin links **/
 	add_filter('basic-admin_before_admin_links',function($links){
 		
-		if(user_can('view_users')){
+		if(user_can('view_roles')){
 			
 			$vars = get_value();
 			
@@ -59,7 +60,6 @@
 		return $links;
 	});
 	
-	
 	/** run this after a form submit **/
 	add_action('controller',function(){
 		
@@ -70,8 +70,8 @@
 		$plugin_route = $vars['plugin_route'];
 		
 		if(URL(1) == $vars['plugin_route'] && $req->posted()){
-			$ses  = new \Core\Session;
-			$user_role = new \UserRole\User_role;
+			$ses       = new \Core\Session;
+			$user_role = new \UserRoles\User_role;
 			
 			$id = URL(3) ?? null;
 			if($id)
@@ -87,6 +87,9 @@
 			}else if(URL(2) == 'delete'){
 				
 				require plugin_path('controllers/delete-controller.php');
+			}else{
+				$user_permission = new \UserRoles\Role_permission;
+				require plugin_path('controllers/list-controller.php');
 			}
 			
 		}
@@ -104,7 +107,7 @@
 		
 		$errors = $vars['errors'] ?? [];
 		
-		$user_role = new \UserRole\User_role;
+		$user_role = new \UserRoles\User_role;
 		
 		if(URL(1) == $vars['plugin_route']){
 			
@@ -128,8 +131,11 @@
 				require plugin_path('views/view.php');
 			}else{
 				
-				$user_role->limit = 30;
-				$rows        = $user_role->getAll();
+				$user_role->limit = 1000;
+				
+				$user_role::$query_id = 'get-roles';
+				$rows                 = $user_role->getAll();
+				
 				require plugin_path('views/list.php');
 			}
 			
@@ -142,11 +148,20 @@
 		if(empty($data['result']))
 			return $data;
 		
-		foreach($data['result'] as $key => $row){
-		
+		if($data['query_id'] == 'get-roles'){
+			$user_permission = new \UserRoles\Role_permission;
+			
+			foreach($data['result'] as $key => $row){
+				
+				$permissions = $user_permission->where(['role_id' => $row->id,'disabled' => 0]);
+				if($permissions)
+					$data['result'][$key]->permissions = array_column($permissions,'permission');
+				
+			}
+			
 		}
 		
 		return $data;
 	});
-	
-	
+
+

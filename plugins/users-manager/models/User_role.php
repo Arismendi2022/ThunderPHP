@@ -1,6 +1,6 @@
 <?php
 
-namespace UserRoles;
+namespace UsersManager;
 use \Model\Model;
 
 defined('ROOT') or die("Direct script access denied");
@@ -34,11 +34,11 @@ class User_role extends Model
  		}else
  		if($this->first(['role'=>$data['role']]))
  		{
- 			$this->errors['role'] = 'Ese rol ya está en uso';
+ 			$this->errors['role'] = 'Ese rol ya está en uso.';
  		}else
  		if(!preg_match("/^[a-zA-Z ]+$/",$data['role']))
  		{
- 			$this->errors['role'] = 'El rol solo puede tener letras y espacios';
+ 			$this->errors['role'] = 'El rol solo puede tener letras y espacios.';
  		}
  		
 
@@ -61,11 +61,11 @@ class User_role extends Model
  		}else
  		if($this->first($role_arr,$role_arr_not))
  		{
- 			$this->errors['role'] = 'Ese rol ya está en uso';
+ 			$this->errors['role'] = 'Ese rol ya está en uso.';
  		}else
  		if(!preg_match("/^[a-zA-Z ]+$/",$data['role']))
  		{
- 			$this->errors['role'] = 'El rol solo puede tener letras y espacios';
+ 			$this->errors['role'] = 'El rol solo puede tener letras y espacios.';
  		}
 
 		return empty($this->errors);

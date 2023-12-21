@@ -67,11 +67,12 @@
 			$roles = $db->query($query);
 			
 			if(is_array($roles)){
+				
 				$user_id = $ses->user('id');
 				$query   = "select permission from " . $vars['optional_tables']['permissions_table'] . "
-			 where role_id in
-			(select role_id from " . $vars['optional_tables']['roles_map_table'] . "
-			 where user_id = :user_id)";
+			  where disabled = 0 && role_id in
+				(select role_id from " . $vars['optional_tables']['roles_map_table'] . "
+			  where disabled = 0 && user_id = :user_id)";
 				
 				$perms = $db->query($query,['user_id' => $user_id]);
 				if($perms)
@@ -95,7 +96,7 @@
 		
 		$link             = (object)[];
 		$link->id         = 0;
-		$link->title      = 'Login';
+		$link->title      = 'Acceso';
 		$link->slug       = 'login';
 		$link->icon       = '';
 		$link->permission = 'not_logged_in';
@@ -103,7 +104,7 @@
 		
 		$link             = (object)[];
 		$link->id         = 0;
-		$link->title      = 'Signup';
+		$link->title      = 'Registrate';
 		$link->slug       = 'signup';
 		$link->icon       = '';
 		$link->permission = 'not_logged_in';
@@ -119,7 +120,7 @@
 		
 		$link             = (object)[];
 		$link->id         = 0;
-		$link->title      = 'Logout';
+		$link->title      = 'Cerrar Sesión';
 		$link->slug       = 'logout';
 		$link->icon       = '';
 		$link->permission = 'logged_in';

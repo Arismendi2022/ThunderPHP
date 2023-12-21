@@ -12,12 +12,13 @@
 	 */
 	class Database
 	{
-		private static $query_id = '';
+		public static $query_id = '';
 		public $affected_rows = 0;
 		public $insert_id = 0;
 		public $error = '';
 		public $has_error = false;
 		public $table_exists_db = '';
+		public $missing_tables 		= [];
 		
 		private function connect()
 		{

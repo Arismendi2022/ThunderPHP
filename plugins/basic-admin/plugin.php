@@ -28,7 +28,7 @@
 		
 		if(page() == $vars['plugin_route'] && !user_can('view_admin_page')){
 			
-			message("Acceso a la página de administración denegado! por favor intente con un inicio de sesión diferente");
+			message_fail("Acceso a la página de administración denegado! por favor intente con un inicio de sesión diferente");
 			redirect('login');
 		}
 		
@@ -82,8 +82,6 @@
 		require plugin_path('views/view.php');
 	});
 	
-	
-	
-	
+
 	
 	

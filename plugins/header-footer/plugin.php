@@ -15,7 +15,7 @@
 		
 		$link        = (object)[];
 		$link->id    = 0;
-		$link->title = 'Home';
+		$link->title = 'Inicio';
 		$link->slug  = 'home';
 		$link->icon  = '';
 		$link->permission  = '';

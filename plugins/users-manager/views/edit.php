@@ -59,6 +59,26 @@
 					<?php endif ?>
 				</div>
 				
+				<div class="mb-3 col-md-12 border p-2">
+					<label>Roles:</label>
+					<div class="row g-2">
+						<?php
+							$query = "select * from user_roles where disabled = 0";
+							$roles = $user_role->query($query);
+						?>
+						<?php if(!empty($roles)):$num = 0?>
+							<?php foreach($roles as $role):$num++?>
+								<div class="form-check col-md-6">
+									<input <?=in_array($role->id, $row->role_ids ?? []) ? ' checked ':''?> name="role_<?=$num?>" class="form-check-input" type="checkbox" value="<?=$role->id?>" id="check<?=$num?>">
+									<label class="form-check-label" for="check<?=$num?>" style="cursor:pointer;">
+										<?=esc(str_replace("_", " ", $role->role))?>
+									</label>
+								</div>
+							<?php endforeach?>
+						<?php endif?>
+					</div>
+				</div>
+				
 				<small class="text-danger">(Deje la contraseña vacía para conservar la anterior)</small>
 				<div class="mb-3 col-md-6">
 					<label for="password" class="form-label">Contraseña</label>

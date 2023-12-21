@@ -12,16 +12,16 @@
 		'admin_route'  => 'admin',
 		'plugin_route' => 'usuarios',
 		'tables'       => [
-			'users_table'       => 'users',
+			'users_table' => 'users',
 		],
-
-		'optional_tables'		=>[
-		'roles_table' 		=> 'user_roles',
-		'permissions_table' => 'role_permissions',
-		'roles_map_table' 	=> 'user_roles_map',
-	],
-
-
+		
+		'optional_tables' => [
+			'roles_table'       => 'user_roles',
+			'permissions_table' => 'role_permissions',
+			'roles_map_table'   => 'user_roles_map',
+		],
+	
+	
 	]);
 	
 	/** check if all tables exist **/
@@ -29,7 +29,7 @@
 	$tables = get_value()['tables'];
 	
 	if(!$db->table_exists($tables)){
-		dd("Faltan tablas de base de datos en " .plugin_id() ." plugin: ". implode(",", $db->missing_tables));
+		dd("Faltan tablas de base de datos en " . plugin_id() . " plugin: " . implode(",",$db->missing_tables));
 		die;
 	}
 	
@@ -98,8 +98,9 @@
 		$plugin_route = $vars['plugin_route'];
 		
 		if(URL(1) == $vars['plugin_route'] && $req->posted()){
-			$ses  = new \Core\Session;
-			$user = new \UsersManager\User;
+			$ses            = new \Core\Session;
+			$user           = new \UsersManager\User;
+			$user_roles_map = new \UsersManager\User_roles_map;
 			
 			$id = URL(3) ?? null;
 			if($id)
@@ -121,7 +122,6 @@
 		
 	});
 	
-	
 	/** displays the view file **/
 	add_action('basic-admin_main_content',function(){
 		
@@ -139,13 +139,16 @@
 			
 			$id = URL(3) ?? null;
 			if($id)
-				$row = $user->first(['id' => $id]);
+				$user::$query_id = 'get-users';
+			$row = $user->first(['id' => $id]);
 			
 			if(URL(2) == 'add'){
 				
+				$user_role = new \UsersManager\User_role;
 				require plugin_path('views/add.php');
 			}else if(URL(2) == 'edit'){
 				
+				$user_role = new \UsersManager\User_role;
 				require plugin_path('views/edit.php');
 				
 			}else if(URL(2) == 'delete'){
@@ -157,13 +160,28 @@
 				require plugin_path('views/view.php');
 			}else{
 				
-				$user->limit = 30;
-				$rows        = $user->getAll();
+				$limit  = 30;
+				$pager  = new \Core\Pager($limit);
+				$offset = $pager->offset;
+				
+				$user->limit     = $limit;
+				$user->offset    = $offset;
+				$user::$query_id = 'get-users';
+				
+				if(!empty($_GET['find'])){
+					$find  = '%' . trim($_GET['find']) . '%';
+					$query = "select * from users where (first_name like :find || last_name like :find) limit $limit offset $offset";
+					$rows  = $user->query($query,['find' => $find]);
+				}else{
+					$rows = $user->getAll();
+				}
+				
 				require plugin_path('views/list.php');
 			}
 			
 		}
 	});
+	
 	
 	/** for manipulating data after a query operation **/
 	add_filter('after_query',function($data){
@@ -171,9 +189,25 @@
 		if(empty($data['result']))
 			return $data;
 		
-		foreach($data['result'] as $key => $row){
-		
+		if($data['query_id'] == 'get-users'){
+			$role_map = new \UsersManager\User_roles_map;
+			foreach($data['result'] as $key => $row){
+				
+				$query = "select * from user_roles where disabled = 0 && id in (select role_id from user_roles_map where disabled = 0 && user_id = :user_id)";
+				$roles = $role_map->query($query,['user_id' => $row->id]);
+				if($roles)
+					$data['result'][$key]->roles = array_column($roles,'role');
+				
+				/** get user's roles **/
+				$user_roles_map = new \UsersManager\User_roles_map;
+				
+				$role_ids = $user_roles_map->where(['user_id' => $row->id,'disabled' => 0]);
+				if($role_ids)
+					$data['result'][$key]->role_ids = array_column($role_ids,'role_id');
+				
+			}
 		}
+		
 		
 		return $data;
 	});
